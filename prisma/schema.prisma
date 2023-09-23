@@ -51,13 +51,19 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String       @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?      @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
+    rating        Int?
+    commentaries  Commentary[]
+
+    followedBy        User[]             @relation(name: "Followers")
+    follows           User[]             @relation(name: "Followers")
+    commentaryRatings CommentaryRating[]
 }
 
 model VerificationToken {
@@ -66,4 +72,29 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Commentary {
+    title       String
+    content     String
+    scriptureId String
+    ratings     CommentaryRating[]
+    createdAt   DateTime           @default(now())
+    updatedAt   DateTime?
+    authorId    String
+    User        User               @relation(fields: [authorId], references: [id])
+
+    @@id([authorId, scriptureId])
+    @@index([authorId])
+}
+
+model CommentaryRating {
+    value                 Int
+    Commentary            Commentary @relation(fields: [commentaryAuthorId, commentaryScriptureId], references: [authorId, scriptureId])
+    commentaryAuthorId    String
+    commentaryScriptureId String
+    raterId               String
+    User                  User       @relation(fields: [raterId], references: [id])
+
+    @@id([commentaryAuthorId, commentaryScriptureId, raterId])
 }
