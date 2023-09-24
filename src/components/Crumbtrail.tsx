@@ -21,7 +21,7 @@ const Crumbtrail = () => {
     }
 
     const crumbs = router.pathname.split("/");
-    let link = "/";
+    let link = "";
     return (
         <div className="flex flex-row border-b border-basic-800 px-12 py-2">
             {crumbs.map((crumb, i, crumbs) => {
