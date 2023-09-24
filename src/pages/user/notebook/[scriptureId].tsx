@@ -59,3 +59,11 @@
 // };
 
 // export default UsersScripture;
+
+import React from "react";
+
+const ScriptureID = () => {
+    return <div>ScriptureID</div>;
+};
+
+export default ScriptureID;
