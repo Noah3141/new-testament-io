@@ -323,8 +323,8 @@ const CommentaryDisplay = ({
                         Delete <VscTrash className="mt-1" />
                     </Button>
                 </div>
-                <div className="mb-6 py-6">
-                    <h1 className="mb-6 text-2xl font-bold">
+                <div className="mb-6 py-12">
+                    <h1 className="mb-3 text-2xl font-bold">
                         {commentary.title}
                     </h1>
                     <p className="whitespace-pre-wrap">{commentary.content}</p>

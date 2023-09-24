@@ -44,7 +44,7 @@ const Navbar = () => {
                         href={"/my-profile"}
                         className="flex flex-row items-center gap-2 whitespace-nowrap hover:text-primary-700"
                     >
-                        My Profile <VscAccount className="mt-1" />
+                        {session?.user.name} <VscAccount className="mt-1" />
                     </Link>
                     <div className="whitespace-nowrap hover:text-primary-700">
                         <button

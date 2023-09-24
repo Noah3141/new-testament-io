@@ -4,6 +4,7 @@ import React, { ReactNode, useState } from "react";
 import { VscEdit } from "react-icons/vsc";
 import WarningPage from "~/components/DefaultPages/WarningPage";
 import PageBlock from "~/components/Layouts/Page";
+import Loading from "~/components/Loading";
 import ProfileImage from "~/components/ProfileImage";
 import { api } from "~/utils/api";
 import { showName } from "~/utils/tools";
@@ -20,7 +21,8 @@ type ProfileForm = {
 
 const MyProfile = () => {
     const { data: session, status } = useSession();
-    const { data: user } = api.user.getSession.useQuery();
+    const { data: user, isLoading: userDataLoading } =
+        api.user.getSession.useQuery();
     const defaultUserState = user ?? {
         name: null,
         email: null,
@@ -38,6 +40,13 @@ const MyProfile = () => {
         );
     }
 
+    if (userDataLoading) {
+        return (
+            <PageBlock>
+                <Loading />
+            </PageBlock>
+        );
+    }
     return (
         <PageBlock>
             <div className="">

@@ -90,7 +90,7 @@ const UserProfilePage = () => {
                 <div className="flex flex-row items-center gap-6 text-basic-50">
                     {userForPage.rating ?? "No rating"}
 
-                    {(!isSessionsOwnPage && signedIn) ?? (
+                    {!isSessionsOwnPage && signedIn && (
                         <Button
                             onClick={() => {
                                 toggleSubscribe({

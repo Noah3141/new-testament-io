@@ -7,17 +7,17 @@ export default {
         extend: {
             colors: {
                 primary: {
-                    50: colors.emerald[50],
-                    100: colors.emerald[100],
-                    200: colors.emerald[200],
-                    300: colors.emerald[300],
-                    400: colors.emerald[400],
-                    500: colors.emerald[500],
-                    600: colors.emerald[600],
-                    700: colors.emerald[700],
-                    800: colors.emerald[800],
-                    900: colors.emerald[900],
-                    950: colors.emerald[950],
+                    50: colors.teal[50],
+                    100: colors.teal[100],
+                    200: colors.teal[200],
+                    300: colors.teal[300],
+                    400: colors.teal[400],
+                    500: colors.teal[500],
+                    600: colors.teal[600],
+                    700: colors.teal[700],
+                    800: colors.teal[800],
+                    900: colors.teal[900],
+                    950: colors.teal[950],
                 },
                 secondary: {
                     50: colors.amber[50],

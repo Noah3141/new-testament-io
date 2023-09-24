@@ -1,36 +1,35 @@
-import { User } from "@prisma/client";
+import { type User } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 import PageBlock from "~/components/Layouts/Page";
 import ProfileImage from "~/components/ProfileImage";
 import { api } from "~/utils/api";
-import { Oval } from "react-loader-spinner";
 import { showName } from "~/utils/tools";
+import { useSession } from "next-auth/react";
+import Loading from "~/components/Loading";
+import WarningPage from "~/components/DefaultPages/WarningPage";
 
 const UsersPage = () => {
     const { data: users, isLoading: usersLoading } = api.user.getAll.useQuery();
+    const { data: session } = useSession();
+
+    if (users?.length === 0) {
+        return <WarningPage warning="No users found!😱" />;
+    }
 
     return (
         <PageBlock>
             <h1 className="mb-6 px-12 text-2xl">Users</h1>
             <div>
                 {usersLoading ? (
-                    <div className="flex w-full flex-row justify-center">
-                        <Oval
-                            height={36}
-                            width={36}
-                            color="#4fa94d"
-                            wrapperStyle={{}}
-                            wrapperClass=""
-                            visible={true}
-                            ariaLabel="oval-loading"
-                            secondaryColor="#4fa94d"
-                            strokeWidth={2}
-                            strokeWidthSecondary={2}
-                        />
-                    </div>
+                    <Loading />
                 ) : (
                     users?.map((user: User, i, users: User[]) => {
+                        const ownUser = user.id === session?.user.id;
+                        const link = ownUser
+                            ? "/my-profile"
+                            : `/user/${user.id}`;
+
                         return (
                             <div
                                 key={i}
@@ -38,7 +37,7 @@ const UsersPage = () => {
                             >
                                 <Link
                                     className="flex flex-row gap-2 hover:text-primary-700"
-                                    href={`/user/${user.id}`}
+                                    href={link}
                                 >
                                     <ProfileImage
                                         src={user.image ?? undefined}
