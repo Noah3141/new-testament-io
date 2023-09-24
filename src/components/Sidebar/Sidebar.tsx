@@ -27,7 +27,7 @@ const Sidebar = ({}) => {
                         >
                             Parable of The Weeds Among the Wheat
                         </SidebarLink>
-                        <SidebarLink link={``}>f</SidebarLink>
+                        <SidebarLink link={``}>Parable 2..</SidebarLink>
                     </Dropdown>
                     <Dropdown
                         targetHeight={"h-24"}

@@ -9,6 +9,7 @@ export const commentaryRouter = createTRPCRouter({
             z.object({
                 scriptureId: z.string(),
                 title: z.string(),
+                link: z.string(),
                 content: z.string(),
             }),
         )
@@ -21,6 +22,7 @@ export const commentaryRouter = createTRPCRouter({
                     },
                 },
                 create: {
+                    link: input.link,
                     authorId: ctx.session.user.id,
                     content: input.content,
                     title: input.title,
@@ -36,6 +38,7 @@ export const commentaryRouter = createTRPCRouter({
 
             return commentary;
         }),
+
     getSessionUsersForScriptureId: protectedProcedure
         .input(z.object({ scriptureId: z.string() }))
         .query(async ({ input, ctx }) => {
@@ -51,6 +54,7 @@ export const commentaryRouter = createTRPCRouter({
 
             return commentary;
         }),
+
     deleteSessionUsersForScriptureId: protectedProcedure
         .input(z.object({ scriptureId: z.string() }))
         .mutation(async ({ input, ctx }) => {
@@ -88,6 +92,7 @@ export const commentaryRouter = createTRPCRouter({
                 });
             return commentaryRating;
         }),
+
     removeRating: protectedProcedure
         .input(
             z.object({
@@ -109,5 +114,26 @@ export const commentaryRouter = createTRPCRouter({
                 });
 
             return deletedRating;
+        }),
+
+    getAllByUserId: publicProcedure
+        .input(z.object({ userId: z.string().optional() }))
+        .query(async ({ ctx, input }) => {
+            if (!input.userId) {
+                return null;
+            }
+
+            const commentaries: Commentary[] = await ctx.db.commentary.findMany(
+                {
+                    where: { authorId: input.userId },
+                    orderBy: [
+                        { createdAt: "desc" },
+                        { rating: { sort: "desc", nulls: "last" } },
+                    ],
+                    include: { ratings: true },
+                },
+            );
+
+            return commentaries;
         }),
 });

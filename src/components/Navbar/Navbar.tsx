@@ -18,7 +18,7 @@ const Navbar = () => {
                 href={"/notebook"}
                 className="whitespace-nowrap hover:text-primary-700"
             >
-                Notebook
+                My Notebook
             </Link>
             <Link
                 href={"/statistics"}
@@ -41,7 +41,7 @@ const Navbar = () => {
                         My Subscriptions
                     </Link>
                     <Link
-                        href={"my-profile"}
+                        href={"/my-profile"}
                         className="flex flex-row items-center gap-2 whitespace-nowrap hover:text-primary-700"
                     >
                         My Profile <VscAccount className="mt-1" />

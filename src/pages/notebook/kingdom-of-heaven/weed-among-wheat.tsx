@@ -1,5 +1,6 @@
 import React from "react";
 import Notebook from "~/components/Layouts/Notebook";
+import Rightbar from "~/components/Rightbar/Rightbar";
 import Scripture from "~/components/Scripture";
 
 const Index = () => {
@@ -40,7 +41,6 @@ const Index = () => {
             them, but gather the wheat into my storehouse.”’ ”
         </span>
     );
-
     const mounce = `24 Jesus put paratithēmi another allos parable parabolē before paratithēmi them autos, saying legō: “ The ho kingdom basileia of ho heaven ouranos is like homoioō a man anthrōpos sowing speirō good kalos seed sperma in en · ho his autos field agros. 25 But de while en · ho everyone anthrōpos was sleeping katheudō, · ho his autos enemy echthros came erchomai · ho and kai sowed epispeirō weeds zizanion among ana mesos the ho wheat sitos and kai went aperchomai away . 26 When hote · de the ho plants chortos came blastanō up and kai bore poieō grain karpos, then tote the ho weeds zizanion appeared phainō as kai well . 27 And de the ho servants of the ho master oikodespotēs of the house came proserchomai and said legō to him autos, ‘ Sir kyrios, did you speirō not ouchi sow speirō good kalos seed sperma in en · ho your sos field agros? Why pothen then oun does it have echō weeds zizanion?’ 28 And de he ho said phēmi to them autos, ‘An enemy echthros has done poieō this houtos!’ And de the ho servants said legō to him autos, ‘ So oun do you want thelō us to go aperchomai and gather syllegō them autos?’ 29 But de he ho replied phēmi, ‘ No ou, lest mēpote in gathering syllegō the ho weeds zizanion you uproot ekrizoō the ho wheat sitos along hama with them autos. 30 Let aphiēmi both amphoteroi grow synauxanō together until heōs the ho harvest therismos; and kai at en harvest therismos time kairos · ho I will tell legō the ho harvesters theristēs, “ First prōton gather syllegō the ho weeds zizanion and kai bind deō them autos into eis bundles desmē to pros · ho be burned katakaiō, then de gather synagō the ho wheat sitos into eis · ho my egō barn apothēkē.`;
 
     const id = "a man which sowed good seed in his field";

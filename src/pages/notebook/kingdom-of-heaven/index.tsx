@@ -1,3 +1,4 @@
+import { GetServerSideProps } from "next/types";
 import React from "react";
 import Notebook from "~/components/Layouts/Notebook";
 

@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
 import { Commentary } from "@prisma/client";
 import { VscEdit, VscTrash } from "react-icons/vsc";
+import { NextRouter, useRouter } from "next/router";
 
 type CommentaryWizardProps = {
     scriptureId: string;
@@ -14,10 +15,12 @@ type CommentaryWizardProps = {
 type CommentarySubmitForm = {
     title: string;
     content: string;
+    link: string;
     scriptureId: string;
 };
 
 const CommentaryWizard = ({ scriptureId }: CommentaryWizardProps) => {
+    const router = useRouter();
     const trpcUtils = api.useContext();
 
     const [editting, setEditting] = useState(false);
@@ -83,6 +86,7 @@ const CommentaryWizard = ({ scriptureId }: CommentaryWizardProps) => {
         title: usersCommentary?.title ?? "",
         content: usersCommentary?.content ?? "",
         scriptureId: scriptureId,
+        link: router.pathname,
     });
 
     if (status != "authenticated") {

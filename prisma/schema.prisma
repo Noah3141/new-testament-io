@@ -64,6 +64,16 @@ model User {
     followedBy        User[]             @relation(name: "Followers")
     follows           User[]             @relation(name: "Followers")
     commentaryRatings CommentaryRating[]
+
+    // User Add Ons
+    hideMe             Boolean @default(false)
+    displayName        String?
+    denomination       String?
+    age                Int?
+    /// Per month reported attendence to church
+    churchFrequency    Int?
+    /// How satisfied with experience attending church
+    churchSatisfaction Int?
 }
 
 model VerificationToken {
@@ -78,6 +88,8 @@ model Commentary {
     title       String
     content     String
     scriptureId String
+    rating      Int?
+    link        String
     ratings     CommentaryRating[]
     createdAt   DateTime           @default(now())
     updatedAt   DateTime?

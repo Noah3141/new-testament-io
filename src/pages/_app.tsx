@@ -7,11 +7,14 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import { Toaster } from "react-hot-toast";
+import { useState } from "react";
 
 const MyApp: AppType<{ session: Session | null }> = ({
     Component,
     pageProps: { session, ...pageProps },
 }) => {
+    const [notebookView, setNotebookView] = useState(session?.user.id ?? null);
+
     return (
         <SessionProvider session={session}>
             <Toaster />

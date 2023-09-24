@@ -4,14 +4,16 @@ import NoImagePlaceholder from "~/images/NoProfilePhoto.png";
 
 type ProfileImageProps = {
     src?: string;
+    size?: number;
+    className?: string;
 };
 
-const ProfileImage = ({ src }: ProfileImageProps) => {
+const ProfileImage = ({ src, size, className = "" }: ProfileImageProps) => {
     return (
         <Image
-            className=""
-            width={30}
-            height={30}
+            className={`  ${className}`}
+            width={size ?? 30}
+            height={size ?? 30}
             src={src ?? NoImagePlaceholder}
             alt={"Profile Image"}
         />

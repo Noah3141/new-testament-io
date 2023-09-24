@@ -1,6 +1,10 @@
 import React, { ReactNode, useState } from "react";
 import CommentaryWizard from "./CommentaryWizard";
 import Crumbtrail from "./Crumbtrail";
+import RatingLight from "./RatingLight";
+import RatingWizard from "./RatingWizard";
+import { signIn, useSession } from "next-auth/react";
+import Button from "./Button";
 
 enum Translation {
     KJV,
@@ -26,9 +30,12 @@ const Scripture = ({
     lexhamText = "Translation not yet entered",
     mounceText = "Translation not yet entered",
 }: ScriptureProps) => {
+    const { data: session, status } = useSession();
     const [bibleTranslation, setBibleTranslation] = useState<Translation>(
         Translation.KJV,
     );
+
+    const signedIn = status == "authenticated";
 
     return (
         <>
@@ -42,7 +49,20 @@ const Scripture = ({
                     {bibleTranslation == Translation.Lexham ? lexhamText : ""}
                     {bibleTranslation == Translation.Mounce ? mounceText : ""}
                 </div>
-                <CommentaryWizard {...{ scriptureId }} />
+                {!signedIn ? (
+                    <div className="flex flex-row justify-end">
+                        <Button
+                            onClick={() => {
+                                void signIn();
+                            }}
+                            color="primary"
+                        >
+                            Sign in
+                        </Button>
+                    </div>
+                ) : (
+                    <CommentaryWizard {...{ scriptureId }} />
+                )}
             </div>
         </>
     );
