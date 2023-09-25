@@ -11,7 +11,10 @@ export const env = createEnv({
             .string()
             .url()
             .refine(
-                (str) => !str.includes("YOUR_MYSQL_URL_HERE"),
+                (str) =>
+                    !str.includes(
+                        "mysql://root:uungobuungo8990%21%23@localhost:3306/new-testament",
+                    ),
                 "You forgot to change the default URL",
             ),
         NODE_ENV: z
