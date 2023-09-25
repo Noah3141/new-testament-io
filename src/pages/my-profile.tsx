@@ -34,12 +34,6 @@ const MyProfile = () => {
     };
     const [form, setForm] = useState<ProfileForm>({ ...defaultUserState });
 
-    if (status != "authenticated" || !user) {
-        return (
-            <WarningPage warning="You must be signed in to see your profile." />
-        );
-    }
-
     if (userDataLoading) {
         return (
             <PageBlock>
@@ -47,6 +41,13 @@ const MyProfile = () => {
             </PageBlock>
         );
     }
+
+    if (status != "authenticated" || !user) {
+        return (
+            <WarningPage warning="You must be signed in to see your profile." />
+        );
+    }
+
     return (
         <PageBlock>
             <div className="">

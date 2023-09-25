@@ -4,13 +4,23 @@ import Link from "next/link";
 import React from "react";
 import WarningPage from "~/components/DefaultPages/WarningPage";
 import PageBlock from "~/components/Layouts/Page";
+import Loading from "~/components/Loading";
 import ProfileImage from "~/components/ProfileImage";
 import { api } from "~/utils/api";
 import { showName } from "~/utils/tools";
 
 const SubscriptionsPage = () => {
-    const { data: subscriptions } = api.user.getSubscriptionsUsers.useQuery();
+    const { data: subscriptions, isLoading: subscriptionLoading } =
+        api.user.getSubscriptionsUsers.useQuery();
     const { status } = useSession();
+
+    if (subscriptionLoading) {
+        <PageBlock>
+            <h1 className="mb-6 px-12 text-2xl">Subscriptions</h1>
+
+            <Loading />
+        </PageBlock>;
+    }
 
     if (status != "authenticated") {
         return (

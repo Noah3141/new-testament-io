@@ -1,4 +1,4 @@
-import { Commentary, User } from "@prisma/client";
+import { type Commentary, type User } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
