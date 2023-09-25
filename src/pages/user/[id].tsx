@@ -3,13 +3,15 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import toast from "react-hot-toast";
 import { Discuss, Oval } from "react-loader-spinner";
 import Button from "~/components/Button";
 import WarningPage from "~/components/DefaultPages/WarningPage";
 import PageBlock from "~/components/Layouts/Page";
+import Loading from "~/components/Loading";
 import ProfileImage from "~/components/ProfileImage";
 import { api } from "~/utils/api";
-import { dateTimeFormatter, showName } from "~/utils/tools";
+import { dateTimeFormatter as dtf } from "~/utils/tools";
 
 const UserProfilePage = () => {
     const trpcUtils = api.useContext();
@@ -23,18 +25,34 @@ const UserProfilePage = () => {
             userId: routeUserId,
         });
 
-    const { mutate: toggleSubscribe, data: subscribedStates } =
-        api.user.toggleSubscribeForSessionToUserId.useMutation({
-            onMutate: () => {
-                console.log();
-            },
-            onSuccess: async () => {
-                await trpcUtils.user.invalidate();
-            },
-            onError: () => {
-                console.log();
-            },
-        });
+    const subscribingToastId = "subscribingToastId";
+    const {
+        mutate: toggleSubscribe,
+        data: subscribedStates,
+        isLoading: toggleSubscribeLoading,
+    } = api.user.toggleSubscribeForSessionToUserId.useMutation({
+        onMutate: () => {
+            toast.loading("🪺", { id: subscribingToastId });
+        },
+        onSuccess: async ({ subscriptionNow }) => {
+            await trpcUtils.user.invalidate();
+
+            if (subscriptionNow) {
+                toast.success("Subscribed!🕊️", {
+                    id: subscribingToastId,
+                });
+            } else {
+                toast.success("Unsubscribed!🕊️", {
+                    id: subscribingToastId,
+                });
+            }
+        },
+        onError: () => {
+            toast.error("Something went wrong! 🪹", {
+                id: subscribingToastId,
+            });
+        },
+    });
 
     const { data: subscriptionData } = api.user.isSubscribedToId.useQuery({
         subscribeToId: routeUserId,
@@ -85,7 +103,7 @@ const UserProfilePage = () => {
                             src={userForPage.image ?? undefined}
                         />
                     </div>
-                    {showName(userForPage)}
+                    {userForPage.name}
                 </h1>
                 <div className="flex flex-row items-center gap-6 text-basic-50">
                     {userForPage.rating ?? "No rating"}
@@ -99,9 +117,14 @@ const UserProfilePage = () => {
                             }}
                             small={true}
                         >
-                            {subscriptionData && subscriptionData.subscribed
-                                ? "Unsubscribe"
-                                : "Subscribe"}
+                            {toggleSubscribeLoading ? (
+                                <Loading inline={true} />
+                            ) : subscriptionData &&
+                              subscriptionData.subscribed ? (
+                                "Unsubscribe"
+                            ) : (
+                                "Subscribe"
+                            )}
                         </Button>
                     )}
                 </div>
@@ -132,7 +155,10 @@ type CommentaryListProps = {
     userId: string;
 };
 
-const CommentaryList = ({ commentaries, userId }: CommentaryListProps) => {
+export const CommentaryList = ({
+    commentaries,
+    userId: authorId,
+}: CommentaryListProps) => {
     if (!commentaries || commentaries.length === 0) {
         return <div className="px-12">No commentaries</div>;
     }
@@ -148,13 +174,13 @@ const CommentaryList = ({ commentaries, userId }: CommentaryListProps) => {
                     >
                         <div className="flex flex-row items-center justify-between">
                             <Link
-                                href={`/${commentary.link}?user=${userId}`}
+                                href={`/${commentary.link}?user=${authorId}`}
                                 className="text-2xl hover:text-primary-700"
                             >
                                 {commentary.title}
                             </Link>
                             <span className="">
-                                {dateTimeFormatter.format(commentary.createdAt)}
+                                {dtf.format(commentary.createdAt)}
                             </span>
                         </div>
                         <p className="mt-3 line-clamp-3 text-ellipsis text-basic-50">

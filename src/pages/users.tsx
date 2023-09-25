@@ -4,13 +4,13 @@ import React from "react";
 import PageBlock from "~/components/Layouts/Page";
 import ProfileImage from "~/components/ProfileImage";
 import { api } from "~/utils/api";
-import { showName } from "~/utils/tools";
 import { useSession } from "next-auth/react";
 import Loading from "~/components/Loading";
 import WarningPage from "~/components/DefaultPages/WarningPage";
 
 const UsersPage = () => {
-    const { data: users, isLoading: usersLoading } = api.user.getAll.useQuery();
+    const { data: users, isLoading: usersLoading } =
+        api.user.getAllWithWhetherSubscribed.useQuery();
     const { data: session } = useSession();
 
     if (users?.length === 0) {
@@ -22,9 +22,9 @@ const UsersPage = () => {
             <h1 className="mb-6 px-12 text-2xl">Users</h1>
             <div>
                 {usersLoading ? (
-                    <Loading />
+                    <Loading inline={false} />
                 ) : (
-                    users?.map((user: User, i, users: User[]) => {
+                    users?.map((user, i) => {
                         const ownUser = user.id === session?.user.id;
                         const link = ownUser
                             ? "/my-profile"
@@ -42,8 +42,9 @@ const UsersPage = () => {
                                     <ProfileImage
                                         src={user.image ?? undefined}
                                     />
-                                    {showName(user)}
+                                    {user.name}
                                 </Link>
+                                {user.subscribedTo ? "🔖" : ""}
                                 <span>{user.rating ?? "No rating"}</span>
                             </div>
                         );

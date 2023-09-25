@@ -7,6 +7,7 @@ import { Oval } from "react-loader-spinner";
 import { Commentary } from "@prisma/client";
 import { VscEdit, VscTrash } from "react-icons/vsc";
 import { NextRouter, useRouter } from "next/router";
+import Loading from "./Loading";
 
 type CommentaryWizardProps = {
     scriptureId: string;
@@ -216,20 +217,7 @@ const CommentaryCreate = ({
                             color="primary"
                         >
                             {submissionLoading ? (
-                                <div className="flex w-full flex-row justify-center">
-                                    <Oval
-                                        height={"24"}
-                                        width={"24"}
-                                        color="#4fa94d"
-                                        wrapperStyle={{}}
-                                        wrapperClass=""
-                                        visible={true}
-                                        ariaLabel="oval-loading"
-                                        secondaryColor="#4fa94d"
-                                        strokeWidth={2}
-                                        strokeWidthSecondary={2}
-                                    />
-                                </div>
+                                <Loading inline={true} />
                             ) : (
                                 "Submit"
                             )}
@@ -365,21 +353,24 @@ const CommentaryDisplay = ({
                                 e.preventDefault();
                                 toast((t) => {
                                     return (
-                                        <span className="cursor-default text-center text-basic-950">
+                                        <span className="cursor-default text-center text-primary-950">
                                             Are you sure?
                                             <div className="flex flex-row gap-6 pt-3">
                                                 <Button
-                                                    color="basic"
+                                                    color="primary"
                                                     small={true}
                                                     onClick={() => {
                                                         setEditting(false);
                                                         toast.dismiss(t.id);
                                                     }}
                                                 >
-                                                    🫗 Scrap changes
+                                                    <span className="rounded-full bg-basic-800">
+                                                        🫗
+                                                    </span>{" "}
+                                                    Scrap changes
                                                 </Button>
                                                 <Button
-                                                    color="basic"
+                                                    color="primary"
                                                     small={true}
                                                     onClick={() =>
                                                         toast.dismiss(t.id)

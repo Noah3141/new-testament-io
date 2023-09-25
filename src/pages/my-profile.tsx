@@ -7,7 +7,8 @@ import PageBlock from "~/components/Layouts/Page";
 import Loading from "~/components/Loading";
 import ProfileImage from "~/components/ProfileImage";
 import { api } from "~/utils/api";
-import { showName } from "~/utils/tools";
+import { CommentaryList } from "./user/[id]";
+import HoverEdit from "~/components/HoverEdit";
 
 type ProfileForm = {
     name: string | null;
@@ -17,6 +18,7 @@ type ProfileForm = {
     age: number | null;
     churchFrequency: number | null;
     churchSatisfaction: number | null;
+    visible: boolean;
 };
 
 const MyProfile = () => {
@@ -31,18 +33,31 @@ const MyProfile = () => {
         age: null,
         churchFrequency: null,
         churchSatisfaction: null,
+        visible: true,
     };
+
+    const { data: commentaries, isLoading: commentariesLoading } =
+        api.commentary.getAllByUserId.useQuery({
+            userId: user?.id ?? undefined,
+        });
+
     const [form, setForm] = useState<ProfileForm>({ ...defaultUserState });
+
+    if (status != "authenticated") {
+        return (
+            <WarningPage warning="You must be signed in to see your profile." />
+        );
+    }
 
     if (userDataLoading) {
         return (
             <PageBlock>
-                <Loading />
+                <Loading inline={false} />
             </PageBlock>
         );
     }
 
-    if (status != "authenticated" || !user) {
+    if (!user) {
         return (
             <WarningPage warning="You must be signed in to see your profile." />
         );
@@ -51,24 +66,18 @@ const MyProfile = () => {
     return (
         <PageBlock>
             <div className="">
-                <div className="flex h-full flex-row items-center gap-3 border-b border-basic-800 px-12 pb-6">
-                    <div className="group relative">
+                <div className="flex h-full flex-row items-center gap-3  border-b border-basic-800 px-12 pb-6">
+                    <HoverEdit
+                        editEvent={() => {
+                            console.log("foo");
+                        }}
+                    >
                         <ProfileImage
                             size={120}
                             src={session.user.image ?? undefined}
                         />
-                        <div
-                            onClick={() => {
-                                console.log("editting");
-                            }}
-                            className="absolute right-0 top-0 z-10 hidden after:absolute after:top-0 after:h-6 after:w-6 after:rounded-full after:bg-primary-700 after:opacity-40 hover:cursor-pointer group-hover:inline"
-                        >
-                            <div className="flex h-6 w-6 flex-row items-center justify-center ">
-                                <VscEdit className="relative z-20" />
-                            </div>
-                        </div>
-                    </div>
-                    <span className="text-3xl">{showName(user)}</span>
+                    </HoverEdit>
+                    <span className="text-3xl">{user.name}</span>
                     <div className="flex w-full flex-row justify-end">
                         <span className="text-basic-50">
                             {user.rating ?? "No rating"}
@@ -77,24 +86,82 @@ const MyProfile = () => {
                 </div>
             </div>
 
-            <div className="flex flex-col gap-5 px-12 py-6">
+            <div className="flex flex-col gap-5  px-12 py-6 text-xl">
                 <h1 className="font-bold">Profile Settings</h1>
-                <div>
-                    <div>Email: </div>
-                    {user.email}
+                <div className="flex flex-col divide-y divide-basic-800">
+                    <div className="flex flex-row items-center justify-between pb-2">
+                        Name:
+                        <HoverEdit
+                            cursorHover={true}
+                            editEvent={() => {}}
+                            className="pe-10"
+                        >
+                            <span className="cursor-default">{user.name}</span>
+                        </HoverEdit>
+                    </div>
+                    <div className="flex flex-row items-center justify-between py-2">
+                        Email:
+                        <HoverEdit
+                            cursorHover={true}
+                            editEvent={() => {}}
+                            className="pe-10"
+                        >
+                            <span className="cursor-default">{user.email}</span>
+                        </HoverEdit>
+                    </div>
+                    <div className="flex flex-row items-center justify-between py-2">
+                        Church frequency:{" "}
+                        <HoverEdit
+                            cursorHover={true}
+                            editEvent={() => {}}
+                            className="pe-10"
+                        >
+                            <span className="cursor-default">
+                                {user.churchFrequency ?? "Not provided"}
+                            </span>
+                        </HoverEdit>
+                    </div>
+                    <div className="flex flex-row items-center justify-between py-2">
+                        Denomination:{" "}
+                        <HoverEdit
+                            cursorHover={true}
+                            editEvent={() => {}}
+                            className="pe-10"
+                        >
+                            <span className="cursor-default">
+                                {user.denomination ?? "Not provided"}
+                            </span>
+                        </HoverEdit>
+                    </div>
+                    <div className="flex flex-row items-center justify-between py-2">
+                        Church Satisfaction:
+                        <HoverEdit
+                            cursorHover={true}
+                            editEvent={() => {}}
+                            className="pe-10"
+                        >
+                            <span className="cursor-default">
+                                {user.churchSatisfaction ?? "Not provided"}
+                            </span>
+                        </HoverEdit>
+                    </div>
+                    <div className="flex flex-row items-center justify-between py-2">
+                        Profile Visibility:
+                        <HoverEdit
+                            cursorHover={true}
+                            editEvent={() => {}}
+                            className="pe-10"
+                        >
+                            <span className="cursor-default">
+                                {user.visible ? "Visible" : "Hidden"}
+                            </span>
+                        </HoverEdit>
+                    </div>
                 </div>
-                <div>
-                    <div>Church frequency: </div>
-                    {user.churchFrequency ?? "Not provided"}
-                </div>
-                <div>
-                    <div>Denomination: </div>
-                    {user.denomination ?? "Not provided"}
-                </div>
-                <div>
-                    <div>Church Satisfaction:</div>
-                    {user.churchSatisfaction ?? "Not provided"}
-                </div>
+            </div>
+            <div className="border-t  border-basic-800 py-6">
+                <h1 className="px-12 pb-2 text-2xl">Commentaries</h1>
+                <CommentaryList userId={user.id} commentaries={commentaries} />
             </div>
         </PageBlock>
     );

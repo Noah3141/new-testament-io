@@ -26,12 +26,12 @@ model Account {
     type              String
     provider          String
     providerAccountId String
-    refresh_token     String? // @db.Text
-    access_token      String? // @db.Text
+    refresh_token     String? @db.Text
+    access_token      String? @db.Text
     expires_at        Int?
     token_type        String?
     scope             String?
-    id_token          String? // @db.Text
+    id_token          String? @db.Text
     session_state     String?
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -62,8 +62,7 @@ model User {
     commentaryRatings CommentaryRating[]
 
     // User Add Ons
-    hideMe             Boolean @default(false)
-    displayName        String?
+    visible            Boolean @default(true)
     denomination       String?
     age                Int?
     /// Per month reported attendence to church
@@ -82,7 +81,7 @@ model VerificationToken {
 
 model Commentary {
     title       String
-    content     String // @db.Text
+    content     String             @db.Text
     scriptureId String
     rating      Int?
     link        String

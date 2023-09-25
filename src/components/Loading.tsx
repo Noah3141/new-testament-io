@@ -1,12 +1,23 @@
 import React from "react";
 import { Oval } from "react-loader-spinner";
 
-const Loading = () => {
+type LoadingProps = {
+    inline: boolean;
+    size?: number;
+};
+
+const Loading = ({ inline, size }: LoadingProps) => {
+    const def = inline ? 24 : 60;
+
     return (
-        <div className="flex h-96 w-full flex-row items-center justify-center">
+        <div
+            className={`flex ${
+                inline ? "" : "h-96"
+            } w-full flex-row items-center justify-center`}
+        >
             <Oval
-                height={60}
-                width={60}
+                height={size ?? def}
+                width={size ?? def}
                 color="#65a30d"
                 wrapperStyle={{}}
                 wrapperClass=""

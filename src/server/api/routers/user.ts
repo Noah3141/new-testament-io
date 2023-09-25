@@ -13,6 +13,24 @@ export const userRouter = createTRPCRouter({
         const users: User[] = await ctx.db.user.findMany({});
         return users;
     }),
+    getAllWithWhetherSubscribed: publicProcedure.query(async ({ ctx }) => {
+        const users = await ctx.db.user.findMany({
+            include: { followedBy: { where: { id: ctx.session?.user.id } } },
+        });
+
+        const usersWithWhetherSubscribedTo = users.map((user) => {
+            const isSubscribedTo: boolean = user.followedBy.some(
+                (user) => user.id === ctx.session?.user.id,
+            );
+            const userWithWhetherSubscribedTo = {
+                ...user,
+                subscribedTo: isSubscribedTo,
+            };
+            return userWithWhetherSubscribedTo;
+        });
+
+        return usersWithWhetherSubscribedTo;
+    }),
 
     getSession: protectedProcedure.query(async ({ ctx }) => {
         const user: User | null = await ctx.db.user.findUnique({
