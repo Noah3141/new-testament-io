@@ -8,9 +8,9 @@ type NotebookProps = {
 
 const Notebook = ({ children: children }: NotebookProps) => {
     return (
-        <div className="mx-auto flex w-full max-w-7xl flex-row">
+        <div className="mx-auto flex w-full  flex-row justify-center">
             <Sidebar />
-            <div className="min-h-screen w-full max-w-7xl border-x border-basic-700">
+            <div className="min-h-screen w-full max-w-5xl border-x border-basic-700">
                 <div className="">{children}</div>
             </div>
             <Rightbar />

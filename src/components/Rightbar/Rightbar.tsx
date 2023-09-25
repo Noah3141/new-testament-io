@@ -16,7 +16,12 @@ const Rightbar = ({}) => {
 
     const label = viewedUser.name;
 
-    return <div>Status:{label}</div>;
+    return (
+        <div className="max-w-xs overflow-hidden truncate whitespace-pre-wrap  px-6 pt-6">
+            <div>Notebook:</div>
+            {label}
+        </div>
+    );
 };
 
 export default Rightbar;
