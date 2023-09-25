@@ -11,6 +11,8 @@ import Loading from "./Loading";
 
 type CommentaryWizardProps = {
     scriptureId: string;
+    scriptureTitle: string;
+    scriptureVerse: string;
 };
 
 type CommentarySubmitForm = {
@@ -18,9 +20,15 @@ type CommentarySubmitForm = {
     content: string;
     link: string;
     scriptureId: string;
+    scriptureTitle: string;
+    scriptureVerse: string;
 };
 
-const CommentaryWizard = ({ scriptureId }: CommentaryWizardProps) => {
+const CommentaryWizard = ({
+    scriptureId,
+    scriptureTitle,
+    scriptureVerse,
+}: CommentaryWizardProps) => {
     const router = useRouter();
     const trpcUtils = api.useContext();
 
@@ -86,8 +94,10 @@ const CommentaryWizard = ({ scriptureId }: CommentaryWizardProps) => {
     const [form, setForm] = useState<CommentarySubmitForm>({
         title: usersCommentary?.title ?? "",
         content: usersCommentary?.content ?? "",
-        scriptureId: scriptureId,
         link: router.pathname,
+        scriptureId: scriptureId,
+        scriptureTitle: scriptureTitle,
+        scriptureVerse: scriptureVerse,
     });
 
     if (status != "authenticated") {

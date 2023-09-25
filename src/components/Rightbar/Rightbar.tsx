@@ -1,15 +1,22 @@
-import { useSession } from "next-auth/react";
 import React from "react";
+import { useViewContext } from "~/server/contexts";
 import { api } from "~/utils/api";
 
 // type RightbarProps = {};
 
 const Rightbar = ({}) => {
-    const { data: session, status } = useSession();
+    const { viewing, setViewing } = useViewContext();
+    const { data: viewedUser, isLoading } = api.user.getbyId.useQuery({
+        userId: viewing ?? undefined,
+    });
 
-    const signedIn = status == "authenticated";
+    if (!viewedUser) {
+        return <div>foo</div>;
+    }
 
-    return <div>Status:{}</div>;
+    const label = viewedUser.name;
+
+    return <div>Status:{label}</div>;
 };
 
 export default Rightbar;

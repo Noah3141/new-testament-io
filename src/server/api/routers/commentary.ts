@@ -11,6 +11,8 @@ export const commentaryRouter = createTRPCRouter({
                 title: z.string(),
                 link: z.string(),
                 content: z.string(),
+                scriptureTitle: z.string(),
+                scriptureVerse: z.string(),
             }),
         )
         .mutation(async ({ ctx, input }) => {
@@ -27,6 +29,8 @@ export const commentaryRouter = createTRPCRouter({
                     content: input.content,
                     title: input.title,
                     scriptureId: input.scriptureId,
+                    scriptureTitle: input.scriptureTitle,
+                    scriptureVerse: input.scriptureVerse,
                 },
                 update: {
                     authorId: ctx.session.user.id,
@@ -123,16 +127,16 @@ export const commentaryRouter = createTRPCRouter({
                 return null;
             }
 
-            const commentaries: Commentary[] = await ctx.db.commentary.findMany(
-                {
-                    where: { authorId: input.userId },
-                    orderBy: [
-                        { createdAt: "desc" },
-                        { rating: { sort: "desc", nulls: "last" } },
-                    ],
-                    include: { ratings: true },
-                },
-            );
+            const commentaries: (Commentary & {
+                ratings: CommentaryRating[];
+            })[] = await ctx.db.commentary.findMany({
+                where: { authorId: input.userId },
+                orderBy: [
+                    { createdAt: "desc" },
+                    { rating: { sort: "desc", nulls: "last" } },
+                ],
+                include: { ratings: true },
+            });
 
             return commentaries;
         }),

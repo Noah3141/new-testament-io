@@ -5,6 +5,7 @@ import RatingLight from "./RatingLight";
 import RatingWizard from "./RatingWizard";
 import { signIn, useSession } from "next-auth/react";
 import Button from "./Button";
+import { useViewContext } from "~/server/contexts";
 
 enum Translation {
     KJV,
@@ -18,8 +19,8 @@ type ScriptureProps = {
     mounceText?: ReactNode;
     lexhamText?: ReactNode;
     verse: string;
-    scriptureId: string;
     authorName?: string;
+    scriptureId: string;
 };
 
 const Scripture = ({
@@ -31,11 +32,50 @@ const Scripture = ({
     mounceText = "Translation not yet entered",
 }: ScriptureProps) => {
     const { data: session, status } = useSession();
+    const { viewing, setViewing } = useViewContext();
+
     const [bibleTranslation, setBibleTranslation] = useState<Translation>(
         Translation.KJV,
     );
 
     const signedIn = status == "authenticated";
+
+    if (typeof viewing == "string" && viewing !== session?.user.id) {
+        // viewing someone else's
+        return (
+            <>
+                <Crumbtrail />
+                <TranslationSelector setTranslation={setBibleTranslation} />
+                <div className="px-12  pt-6 text-basic-100">
+                    <h1 className="text-2xl font-bold">{title}</h1>
+                    <h2 className="text-lg">{verse}</h2>
+                    <div className="mb-6 border-b border-b-basic-800 py-6">
+                        {bibleTranslation == Translation.KJV ? kjvText : ""}
+                        {bibleTranslation == Translation.Lexham
+                            ? lexhamText
+                            : ""}
+                        {bibleTranslation == Translation.Mounce
+                            ? mounceText
+                            : ""}
+                    </div>
+                    {!signedIn ? (
+                        <div className="flex flex-row justify-end">
+                            <Button
+                                onClick={() => {
+                                    void signIn();
+                                }}
+                                color="primary"
+                            >
+                                Sign in
+                            </Button>
+                        </div>
+                    ) : (
+                        <RatingWizard />
+                    )}
+                </div>
+            </>
+        );
+    }
 
     return (
         <>
@@ -61,7 +101,13 @@ const Scripture = ({
                         </Button>
                     </div>
                 ) : (
-                    <CommentaryWizard {...{ scriptureId }} />
+                    <CommentaryWizard
+                        {...{
+                            scriptureId,
+                            scriptureTitle: title,
+                            scriptureVerse: verse,
+                        }}
+                    />
                 )}
             </div>
         </>

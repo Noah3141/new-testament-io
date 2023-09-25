@@ -44,8 +44,15 @@ const UsersPage = () => {
                                     />
                                     {user.name}
                                 </Link>
-                                {user.subscribedTo ? "🔖" : ""}
-                                <span>{user.rating ?? "No rating"}</span>
+                                <div className="relative">
+                                    <span>{user.rating ?? "No rating"}</span>
+                                    <span
+                                        title="Subscribed"
+                                        className="absolute -right-1 top-0 translate-x-full cursor-default"
+                                    >
+                                        {user.subscribedTo ? "🔖" : ""}
+                                    </span>
+                                </div>
                             </div>
                         );
                     })

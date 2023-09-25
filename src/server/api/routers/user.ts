@@ -1,4 +1,4 @@
-import { type Commentary, type User } from "@prisma/client";
+import { CommentaryRating, type Commentary, type User } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -85,6 +85,24 @@ export const userRouter = createTRPCRouter({
         });
         return subscribedToUsers;
     }),
+
+    getSubscriptionsUsersWithRecentCommentary: protectedProcedure.query(
+        async ({ ctx }) => {
+            const subscribedToUsers: (User & {
+                commentaries: (Commentary & { ratings: CommentaryRating[] })[];
+            })[] = await ctx.db.user.findMany({
+                where: { followedBy: { some: { id: ctx.session.user.id } } },
+                include: {
+                    commentaries: {
+                        take: 3,
+                        orderBy: { createdAt: "desc" },
+                        include: { ratings: true },
+                    },
+                },
+            });
+            return subscribedToUsers;
+        },
+    ),
 
     isSubscribedToId: publicProcedure
         .input(z.object({ subscribeToId: z.string().optional() }))

@@ -6,12 +6,12 @@ import React from "react";
 import toast from "react-hot-toast";
 import { Discuss, Oval } from "react-loader-spinner";
 import Button from "~/components/Button";
+import CommentaryList from "~/components/CommentaryList";
 import WarningPage from "~/components/DefaultPages/WarningPage";
 import PageBlock from "~/components/Layouts/Page";
 import Loading from "~/components/Loading";
 import ProfileImage from "~/components/ProfileImage";
 import { api } from "~/utils/api";
-import { dateTimeFormatter as dtf } from "~/utils/tools";
 
 const UserProfilePage = () => {
     const trpcUtils = api.useContext();
@@ -142,54 +142,15 @@ const UserProfilePage = () => {
                     />
                 ) : (
                     <CommentaryList
-                        {...{ userId: routeUserId, commentaries }}
+                        {...{
+                            userId: routeUserId,
+                            commentaries,
+                            sessionId: session?.user.id,
+                        }}
                     />
                 )}
             </div>
         </PageBlock>
-    );
-};
-
-type CommentaryListProps = {
-    commentaries?: Commentary[] | null;
-    userId: string;
-};
-
-export const CommentaryList = ({
-    commentaries,
-    userId: authorId,
-}: CommentaryListProps) => {
-    if (!commentaries || commentaries.length === 0) {
-        return <div className="px-12">No commentaries</div>;
-    }
-    return (
-        <div className="">
-            {commentaries.map((commentary, i) => {
-                console.log(commentary.link);
-
-                return (
-                    <div
-                        className="flex flex-col border-y border-y-basic-800 px-12 py-6"
-                        key={i}
-                    >
-                        <div className="flex flex-row items-center justify-between">
-                            <Link
-                                href={`/${commentary.link}?user=${authorId}`}
-                                className="text-2xl hover:text-primary-700"
-                            >
-                                {commentary.title}
-                            </Link>
-                            <span className="">
-                                {dtf.format(commentary.createdAt)}
-                            </span>
-                        </div>
-                        <p className="mt-3 line-clamp-3 text-ellipsis text-basic-50">
-                            {commentary.content}
-                        </p>
-                    </div>
-                );
-            })}
-        </div>
     );
 };
 

@@ -4,32 +4,62 @@
 //todo Disables or hides links for which that user has no interpretation yet
 
 import Link from "next/link";
-import React, { ReactNode, useState } from "react";
+import React, { type ReactNode, useState } from "react";
+import { useSidebarContext } from "~/server/contexts";
 
 // type SidebarProps = {};
 
 const Sidebar = ({}) => {
+    const { sidebarState, setSidebarState } = useSidebarContext();
+
     return (
         <div className="sticky top-0 max-h-screen w-[320px]  shrink-0 overflow-y-scroll  pt-6  text-lg">
             <div className="flex shrink-0 flex-col items-start">
                 <SuperDropdown
+                    expanded={sidebarState.Gospels}
+                    onClick={() =>
+                        setSidebarState({
+                            ...sidebarState,
+                            Gospels: !sidebarState.Gospels,
+                        })
+                    }
                     targetHeight={"h-[600px]"}
                     sectionTitle="Gospels"
                     defaultState={true}
                 >
+                    {/* KINGDOM OF HEAVEN SECTION */}
                     <Dropdown
+                        expanded={sidebarState.KingdomOfHeaven}
+                        onClick={() =>
+                            setSidebarState({
+                                ...sidebarState,
+                                KingdomOfHeaven: !sidebarState.KingdomOfHeaven,
+                            })
+                        }
                         targetHeight={"h-36"}
                         sectionTitle="Kingdom of Heaven"
                         defaultState={false}
                     >
+                        {/* LINKS LIST */}
                         <SidebarLink
                             link={`/notebook/kingdom-of-heaven/weed-among-wheat`}
                         >
                             Parable of The Weeds Among the Wheat
                         </SidebarLink>
-                        <SidebarLink link={``}>Parable 2..</SidebarLink>
+                        <SidebarLink
+                            link={`/notebook/kingdom-of-heaven/new-cloth`}
+                        >
+                            New Cloth and Old
+                        </SidebarLink>
                     </Dropdown>
                     <Dropdown
+                        expanded={sidebarState.KingdomOfHeaven}
+                        onClick={() =>
+                            setSidebarState({
+                                ...sidebarState,
+                                KingdomOfHeaven: !sidebarState.KingdomOfHeaven,
+                            })
+                        }
                         targetHeight={"h-24"}
                         sectionTitle="Sermon on the Mount"
                         defaultState={false}
@@ -37,6 +67,13 @@ const Sidebar = ({}) => {
                         <SidebarLink link={``}>f</SidebarLink>
                     </Dropdown>
                     <Dropdown
+                        expanded={sidebarState.KingdomOfHeaven}
+                        onClick={() =>
+                            setSidebarState({
+                                ...sidebarState,
+                                KingdomOfHeaven: !sidebarState.KingdomOfHeaven,
+                            })
+                        }
                         targetHeight={"h-96"}
                         sectionTitle="Miracles"
                         defaultState={false}
@@ -45,6 +82,13 @@ const Sidebar = ({}) => {
                     </Dropdown>
                 </SuperDropdown>
                 <Dropdown
+                    expanded={sidebarState.KingdomOfHeaven}
+                    onClick={() =>
+                        setSidebarState({
+                            ...sidebarState,
+                            KingdomOfHeaven: !sidebarState.KingdomOfHeaven,
+                        })
+                    }
                     targetHeight={"h-24"}
                     sectionTitle="Fire & Water"
                     defaultState={false}
@@ -52,6 +96,13 @@ const Sidebar = ({}) => {
                     <SidebarLink link={``}>Reference 2</SidebarLink>
                 </Dropdown>
                 <Dropdown
+                    expanded={sidebarState.KingdomOfHeaven}
+                    onClick={() =>
+                        setSidebarState({
+                            ...sidebarState,
+                            KingdomOfHeaven: !sidebarState.KingdomOfHeaven,
+                        })
+                    }
                     targetHeight={"h-96"}
                     sectionTitle="Pharisees"
                     defaultState={false}
@@ -68,6 +119,8 @@ type DropdownProps = {
     defaultState: boolean;
     sectionTitle: string;
     targetHeight: string;
+    expanded: boolean;
+    onClick: React.MouseEventHandler<HTMLSpanElement>;
 };
 
 const SidebarLink = ({
@@ -85,12 +138,12 @@ const SidebarLink = ({
 };
 
 const Dropdown = ({
-    children: children,
-    defaultState,
+    children,
     sectionTitle,
+    expanded,
+    onClick,
     targetHeight,
 }: DropdownProps) => {
-    const [expanded, setExpanded] = useState(defaultState);
     return (
         <>
             <div
@@ -100,7 +153,7 @@ const Dropdown = ({
             >
                 <span
                     className="mb-1 hover:text-primary-600 "
-                    onClick={() => setExpanded((v) => !v)}
+                    onClick={onClick}
                 >
                     {sectionTitle}
                 </span>
@@ -116,7 +169,7 @@ const SuperDropdown = ({
     sectionTitle,
     targetHeight,
 }: DropdownProps) => {
-    const [expanded, setExpanded] = useState(defaultState);
+    const [expanded, setSidebarState] = useState(defaultState);
     return (
         <>
             <div
@@ -126,7 +179,7 @@ const SuperDropdown = ({
             >
                 <span
                     className="mb-1 ps-6 text-xl font-semibold hover:text-primary-600"
-                    onClick={() => setExpanded((v) => !v)}
+                    onClick={() => setSidebarState((v) => !v)}
                 >
                     {sectionTitle}
                 </span>

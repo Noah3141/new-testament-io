@@ -2,6 +2,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 import { VscSignIn, VscSignOut, VscAccount } from "react-icons/vsc";
+import { useViewContext } from "~/server/contexts";
 
 // type NavbarProps = {
 
@@ -10,12 +11,16 @@ import { VscSignIn, VscSignOut, VscAccount } from "react-icons/vsc";
 const Navbar = () => {
     const { data: session, status } = useSession();
 
+    const { viewing, setViewing } = useViewContext();
     const signedIn = status == "authenticated";
 
     return (
         <div className="flex flex-row justify-end gap-6 border-b border-basic-700 px-12 py-4">
             <Link
                 href={"/notebook"}
+                onClick={() => {
+                    setViewing(session?.user.id ?? null);
+                }}
                 className="whitespace-nowrap hover:text-primary-700"
             >
                 My Notebook

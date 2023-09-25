@@ -80,16 +80,18 @@ model VerificationToken {
 }
 
 model Commentary {
-    title       String
-    content     String             @db.Text
-    scriptureId String
-    rating      Int?
-    link        String
-    ratings     CommentaryRating[]
-    createdAt   DateTime           @default(now())
-    updatedAt   DateTime?
-    authorId    String
-    User        User               @relation(fields: [authorId], references: [id])
+    title          String
+    content        String             @db.Text
+    scriptureId    String
+    scriptureTitle String
+    scriptureVerse String
+    rating         Int?
+    link           String
+    ratings        CommentaryRating[]
+    createdAt      DateTime           @default(now())
+    updatedAt      DateTime?
+    authorId       String
+    User           User               @relation(fields: [authorId], references: [id])
 
     @@id([authorId, scriptureId])
     @@index([authorId])

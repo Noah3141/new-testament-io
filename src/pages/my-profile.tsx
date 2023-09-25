@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import React, { ReactNode, useState } from "react";
@@ -7,8 +8,8 @@ import PageBlock from "~/components/Layouts/Page";
 import Loading from "~/components/Loading";
 import ProfileImage from "~/components/ProfileImage";
 import { api } from "~/utils/api";
-import { CommentaryList } from "./user/[id]";
 import HoverEdit from "~/components/HoverEdit";
+import CommentaryList from "~/components/CommentaryList";
 
 type ProfileForm = {
     name: string | null;
@@ -68,6 +69,7 @@ const MyProfile = () => {
             <div className="">
                 <div className="flex h-full flex-row items-center gap-3  border-b border-basic-800 px-12 pb-6">
                     <HoverEdit
+                        cursorHover={false}
                         editEvent={() => {
                             console.log("foo");
                         }}
@@ -161,7 +163,11 @@ const MyProfile = () => {
             </div>
             <div className="border-t  border-basic-800 py-6">
                 <h1 className="px-12 pb-2 text-2xl">Commentaries</h1>
-                <CommentaryList userId={user.id} commentaries={commentaries} />
+                <CommentaryList
+                    sessionId={session.user.id}
+                    userId={user.id}
+                    commentaries={commentaries}
+                />
             </div>
         </PageBlock>
     );
