@@ -5,6 +5,9 @@ generator client {
     provider = "prisma-client-js"
 }
 
+// #  DROP TABLE IF EXISTS Example, Account, _Followers, Session, User, VerificationToken, Commentary, CommentaryRating;
+// url      = "mysql://root:W4ffnQRDGAUVvspZKCHV@containers-us-west-40.railway.app:5855/railway"
+
 datasource db {
     provider = "mysql"
     url      = env("DATABASE_URL")

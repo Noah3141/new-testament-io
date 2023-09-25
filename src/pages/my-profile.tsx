@@ -163,11 +163,15 @@ const MyProfile = () => {
             </div>
             <div className="border-t  border-basic-800 py-6">
                 <h1 className="px-12 pb-2 text-2xl">Commentaries</h1>
-                <CommentaryList
-                    sessionId={session.user.id}
-                    userId={user.id}
-                    commentaries={commentaries}
-                />
+                {commentariesLoading ? (
+                    <Loading inline={false} />
+                ) : (
+                    <CommentaryList
+                        sessionId={session.user.id}
+                        userId={user.id}
+                        commentaries={commentaries}
+                    />
+                )}
             </div>
         </PageBlock>
     );
