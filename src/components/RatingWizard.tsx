@@ -1,5 +1,6 @@
 import { Rating } from "@mui/material";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { VscStarEmpty, VscStarFull } from "react-icons/vsc";
 import { api } from "~/utils/api";
 
@@ -61,11 +62,18 @@ const RatingWizard = ({ raterId, authorId }: RatingWizardProps) => {
         practical: null,
         deep: null,
     });
+    const ratingToastId = "ratingToastId";
     const { mutate: updateRating, isLoading: loadingRatingUpdate } =
         api.commentary.addRating.useMutation({
-            onMutate: () => {},
-            onSuccess: () => {},
-            onError: () => {},
+            onMutate: () => {
+                toast.loading("Submitting rating...", { id: ratingToastId });
+            },
+            onSuccess: () => {
+                toast.success("Rating submitted!", { id: ratingToastId });
+            },
+            onError: () => {
+                toast.error("Something went wrong!", { id: ratingToastId });
+            },
         });
 
     return (
