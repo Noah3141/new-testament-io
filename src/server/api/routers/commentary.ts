@@ -1,7 +1,6 @@
-import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
-import { Commentary, CommentaryRating } from "@prisma/client";
+import { type Commentary, type CommentaryRating } from "@prisma/client";
 
 export const commentaryRouter = createTRPCRouter({
     upsert: protectedProcedure
