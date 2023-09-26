@@ -6,11 +6,16 @@ export type SidebarContext = {
 };
 
 export const sidebarDropdownState = {
+    // The dropdown headers that can be expanded or collapsed
     Gospels: true,
     KingdomOfHeaven: false,
-    Sayings: false,
     SermonOnTheMount: false,
+    Healings: false,
+    Miracles: false,
+    Sayings: false,
     Symbols: false,
+    FireAndWater: false,
+    Pharisees: false,
 };
 
 export type SidebarDropdownState = typeof sidebarDropdownState;
@@ -30,7 +35,7 @@ export type ViewContext = {
 };
 
 export const ViewStateContext = createContext<ViewContext>({
-    viewing: "Hello World", // set a default value
+    viewing: null, // set a default value
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     setViewing: (): void => {},
 });

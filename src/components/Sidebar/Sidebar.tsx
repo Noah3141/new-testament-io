@@ -16,6 +16,7 @@ const Sidebar = ({}) => {
         <div className="sticky top-0 max-h-screen w-[320px]  shrink-0 overflow-y-scroll  pt-6  text-lg">
             <div className="flex shrink-0 flex-col items-start">
                 <SuperDropdown
+                    sectionTitle="Gospels"
                     expanded={sidebarState.Gospels}
                     onClick={() =>
                         setSidebarState({
@@ -23,12 +24,11 @@ const Sidebar = ({}) => {
                             Gospels: !sidebarState.Gospels,
                         })
                     }
-                    targetHeight={"h-[600px]"}
-                    sectionTitle="Gospels"
-                    defaultState={true}
+                    targetHeight={"h-[800px]"}
                 >
                     {/* KINGDOM OF HEAVEN SECTION */}
                     <Dropdown
+                        sectionTitle="Kingdom of Heaven"
                         expanded={sidebarState.KingdomOfHeaven}
                         onClick={() =>
                             setSidebarState({
@@ -37,77 +37,83 @@ const Sidebar = ({}) => {
                             })
                         }
                         targetHeight={"h-36"}
-                        sectionTitle="Kingdom of Heaven"
-                        defaultState={false}
                     >
                         {/* LINKS LIST */}
                         <SidebarLink
                             link={`/notebook/kingdom-of-heaven/weed-among-wheat`}
-                        >
-                            Parable of The Weeds Among the Wheat
-                        </SidebarLink>
+                            text="Parable of The Weeds Among the Wheat"
+                        />
                         <SidebarLink
                             link={`/notebook/kingdom-of-heaven/new-cloth`}
-                        >
-                            New Cloth and Old
-                        </SidebarLink>
+                            text="New Cloth and Old"
+                        />
                     </Dropdown>
                     <Dropdown
-                        expanded={sidebarState.KingdomOfHeaven}
+                        sectionTitle="Sermon on the Mount"
+                        expanded={sidebarState.SermonOnTheMount}
                         onClick={() =>
                             setSidebarState({
                                 ...sidebarState,
-                                KingdomOfHeaven: !sidebarState.KingdomOfHeaven,
+                                SermonOnTheMount:
+                                    !sidebarState.SermonOnTheMount,
                             })
                         }
                         targetHeight={"h-24"}
-                        sectionTitle="Sermon on the Mount"
-                        defaultState={false}
                     >
-                        <SidebarLink link={``}>f</SidebarLink>
+                        <SidebarLink link={``} text="Salt and Light" />
                     </Dropdown>
                     <Dropdown
-                        expanded={sidebarState.KingdomOfHeaven}
+                        sectionTitle="Healings"
+                        expanded={sidebarState.Healings}
                         onClick={() =>
                             setSidebarState({
                                 ...sidebarState,
-                                KingdomOfHeaven: !sidebarState.KingdomOfHeaven,
+                                Healings: !sidebarState.Healings,
                             })
                         }
-                        targetHeight={"h-96"}
-                        sectionTitle="Miracles"
-                        defaultState={false}
+                        targetHeight={"h-32"}
                     >
-                        <SidebarLink link={``}>f</SidebarLink>
+                        <SidebarLink link={``} text="The Blind Man" />
+                    </Dropdown>
+                    <Dropdown
+                        sectionTitle="Miracles"
+                        expanded={sidebarState.Miracles}
+                        onClick={() =>
+                            setSidebarState({
+                                ...sidebarState,
+                                Miracles: !sidebarState.Miracles,
+                            })
+                        }
+                        targetHeight={"h-32"}
+                    >
+                        <SidebarLink link={``} text="Water Into Wine" />
                     </Dropdown>
                 </SuperDropdown>
                 <Dropdown
-                    expanded={sidebarState.KingdomOfHeaven}
+                    sectionTitle="Fire & Water"
+                    expanded={sidebarState.FireAndWater}
                     onClick={() =>
                         setSidebarState({
                             ...sidebarState,
-                            KingdomOfHeaven: !sidebarState.KingdomOfHeaven,
+                            FireAndWater: !sidebarState.FireAndWater,
                         })
                     }
                     targetHeight={"h-24"}
-                    sectionTitle="Fire & Water"
-                    defaultState={false}
                 >
-                    <SidebarLink link={``}>Reference 2</SidebarLink>
+                    <SidebarLink link={``} text="Born Again of Fire" />
                 </Dropdown>
                 <Dropdown
-                    expanded={sidebarState.KingdomOfHeaven}
+                    sectionTitle="Pharisees"
+                    expanded={sidebarState.Pharisees}
                     onClick={() =>
                         setSidebarState({
                             ...sidebarState,
-                            KingdomOfHeaven: !sidebarState.KingdomOfHeaven,
+                            Pharisees: !sidebarState.Pharisees,
                         })
                     }
                     targetHeight={"h-96"}
-                    sectionTitle="Pharisees"
-                    defaultState={false}
                 >
-                    <SidebarLink link={``}>f</SidebarLink>
+                    <SidebarLink link={``} text="Give Unto Ceasar" />
                 </Dropdown>
             </div>
         </div>
@@ -116,20 +122,13 @@ const Sidebar = ({}) => {
 
 type DropdownProps = {
     children: ReactNode;
-    defaultState: boolean;
     sectionTitle: string;
     targetHeight: string;
     expanded: boolean;
     onClick: React.MouseEventHandler<HTMLSpanElement>;
 };
 
-const SidebarLink = ({
-    link,
-    children: text,
-}: {
-    link: string;
-    children: ReactNode;
-}) => {
+const SidebarLink = ({ link, text }: { link: string; text: string }) => {
     return (
         <Link className={`pe-1 ps-6 hover:text-primary-700  `} href={link}>
             {text}
@@ -165,11 +164,11 @@ const Dropdown = ({
 
 const SuperDropdown = ({
     children: children,
-    defaultState,
     sectionTitle,
+    onClick,
+    expanded,
     targetHeight,
 }: DropdownProps) => {
-    const [expanded, setSidebarState] = useState(defaultState);
     return (
         <>
             <div
@@ -179,7 +178,7 @@ const SuperDropdown = ({
             >
                 <span
                     className="mb-1 ps-6 text-xl font-semibold hover:text-primary-600"
-                    onClick={() => setSidebarState((v) => !v)}
+                    onClick={onClick}
                 >
                     {sectionTitle}
                 </span>

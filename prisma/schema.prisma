@@ -5,8 +5,10 @@ generator client {
     provider = "prisma-client-js"
 }
 
+// Probably don't need but this would be the manual wipe:
 // #  DROP TABLE IF EXISTS Example, Account, _Followers, Session, User, VerificationToken, Commentary, CommentaryRating;
-// url      = "mysql://root:W4ffnQRDGAUVvspZKCHV@containers-us-west-40.railway.app:5855/railway"
+
+// Switch in to point Prisma push unto the deployed database, usually wiping when nececssary
 
 datasource db {
     provider = "mysql"
@@ -101,7 +103,11 @@ model Commentary {
 }
 
 model CommentaryRating {
-    value                 Int
+    comprehensive         Int
+    comprehensible        Int
+    coherent              Int
+    practical             Int
+    deep                  Int
     Commentary            Commentary @relation(fields: [commentaryAuthorId, commentaryScriptureId], references: [authorId, scriptureId])
     commentaryAuthorId    String
     commentaryScriptureId String

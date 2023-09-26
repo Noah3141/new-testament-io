@@ -58,7 +58,7 @@ const MyProfile = () => {
         );
     }
 
-    if (!user) {
+    if (typeof user == "undefined") {
         return (
             <WarningPage warning="You must be signed in to see your profile." />
         );

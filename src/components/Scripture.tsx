@@ -6,6 +6,7 @@ import RatingWizard from "./RatingWizard";
 import { signIn, useSession } from "next-auth/react";
 import Button from "./Button";
 import { useViewContext } from "~/server/contexts";
+import Loading from "./Loading";
 
 enum Translation {
     KJV,
@@ -38,18 +39,16 @@ const Scripture = ({
         Translation.KJV,
     );
 
-    const signedIn = status == "authenticated";
-
     if (typeof viewing == "string" && viewing !== session?.user.id) {
         // viewing someone else's
         return (
             <>
                 <Crumbtrail />
                 <TranslationSelector setTranslation={setBibleTranslation} />
-                <div className="px-12  pt-6 text-basic-100">
-                    <h1 className="text-2xl font-bold">{title}</h1>
-                    <h2 className="text-lg">{verse}</h2>
-                    <div className="mb-6 border-b border-b-basic-800 py-6">
+                <div className="  pt-6 text-basic-100">
+                    <h1 className="px-12 text-2xl font-bold">{title}</h1>
+                    <h2 className="px-12 text-lg">{verse}</h2>
+                    <div className="mb-6 border-b border-b-basic-800 px-12 py-6">
                         {bibleTranslation == Translation.KJV ? kjvText : ""}
                         {bibleTranslation == Translation.Lexham
                             ? lexhamText
@@ -58,8 +57,10 @@ const Scripture = ({
                             ? mounceText
                             : ""}
                     </div>
-                    {!signedIn ? (
-                        <div className="flex flex-row justify-end">
+                    {status == "loading" ? (
+                        <Loading inline={false} />
+                    ) : !session ? (
+                        <div className="flex flex-row justify-end px-12">
                             <Button
                                 onClick={() => {
                                     void signIn();
@@ -70,7 +71,10 @@ const Scripture = ({
                             </Button>
                         </div>
                     ) : (
-                        <RatingWizard />
+                        <RatingWizard
+                            authorId={viewing}
+                            raterId={session.user.id}
+                        />
                     )}
                 </div>
             </>
@@ -89,7 +93,7 @@ const Scripture = ({
                     {bibleTranslation == Translation.Lexham ? lexhamText : ""}
                     {bibleTranslation == Translation.Mounce ? mounceText : ""}
                 </div>
-                {!signedIn ? (
+                {!session ? (
                     <div className="flex flex-row justify-end">
                         <Button
                             onClick={() => {

@@ -11,7 +11,7 @@ const Rightbar = ({}) => {
     });
 
     if (!viewedUser) {
-        return <div>foo</div>;
+        return <div></div>;
     }
 
     const label = viewedUser.name;
