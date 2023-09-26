@@ -1,6 +1,5 @@
 import React from "react";
 import Notebook from "~/components/Layouts/Notebook";
-import Rightbar from "~/components/Rightbar/Rightbar";
 import Scripture from "~/components/Scripture";
 
 const Index = () => {

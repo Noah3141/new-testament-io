@@ -78,7 +78,15 @@ export const commentaryRouter = createTRPCRouter({
     addRating: protectedProcedure
         .input(
             z.object({
-                rating: z.number(),
+                ratings: z.object({
+                    closeness: z.number(),
+                    coherent: z.number(),
+                    comprehensible: z.number(),
+                    comprehensive: z.number(),
+                    deep: z.number(),
+                    practical: z.number(),
+                }),
+                raterId: z.string(),
                 commentaryId: z.string(),
                 scriptureId: z.string(),
                 authorId: z.string(),
@@ -86,12 +94,32 @@ export const commentaryRouter = createTRPCRouter({
         )
         .mutation(async ({ ctx, input }) => {
             const commentaryRating: CommentaryRating =
-                await ctx.db.commentaryRating.create({
-                    data: {
+                await ctx.db.commentaryRating.upsert({
+                    create: {
+                        closeness: input.ratings.closeness,
+                        coherent: input.ratings.coherent,
+                        comprehensible: input.ratings.comprehensible,
+                        comprehensive: input.ratings.comprehensive,
+                        deep: input.ratings.deep,
+                        practical: input.ratings.practical,
+                        raterId: input.raterId,
                         commentaryAuthorId: input.authorId,
                         commentaryScriptureId: input.scriptureId,
-                        value: input.rating,
-                        raterId: ctx.session.user.id,
+                    },
+                    update: {
+                        closeness: input.ratings.closeness,
+                        coherent: input.ratings.coherent,
+                        comprehensible: input.ratings.comprehensible,
+                        comprehensive: input.ratings.comprehensive,
+                        deep: input.ratings.deep,
+                        practical: input.ratings.practical,
+                    },
+                    where: {
+                        commentaryAuthorId_commentaryScriptureId_raterId: {
+                            commentaryAuthorId: input.authorId,
+                            commentaryScriptureId: input.scriptureId,
+                            raterId: input.raterId,
+                        },
                     },
                 });
             return commentaryRating;

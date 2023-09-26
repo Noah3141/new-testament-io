@@ -106,6 +106,7 @@ model CommentaryRating {
     comprehensive         Int
     comprehensible        Int
     coherent              Int
+    closeness             Int
     practical             Int
     deep                  Int
     Commentary            Commentary @relation(fields: [commentaryAuthorId, commentaryScriptureId], references: [authorId, scriptureId])

@@ -36,16 +36,64 @@ const Sidebar = ({}) => {
                                 KingdomOfHeaven: !sidebarState.KingdomOfHeaven,
                             })
                         }
-                        targetHeight={"h-36"}
+                        targetHeight={"h-96"}
                     >
                         {/* LINKS LIST */}
                         <SidebarLink
-                            link={`/notebook/kingdom-of-heaven/weed-among-wheat`}
-                            text="Parable of The Weeds Among the Wheat"
+                            link={`/notebook/kingdom-of-heaven/as-little-children`}
+                            text="Unless You Become as Little Children"
                         />
                         <SidebarLink
-                            link={`/notebook/kingdom-of-heaven/new-cloth`}
-                            text="New Cloth and Old"
+                            link={`/notebook/kingdom-of-heaven/a-net-cast-into-sea`}
+                            text="Like a Net Cast into Sea"
+                        />
+                        <SidebarLink
+                            link={`/notebook/kingdom-of-heaven/east-and-west`}
+                            text="Many Shall Come From East & West"
+                        />
+                        <SidebarLink
+                            link={`/notebook/kingdom-of-heaven/exceed-the-scribes`}
+                            text="Righteousness Exceeding the Scribes & Pharisees"
+                        />
+                        <SidebarLink
+                            link={`/notebook/kingdom-of-heaven/great-pearls`}
+                            text="Like A Man Seeking Pearls"
+                        />
+                        <SidebarLink
+                            link={`/notebook/kingdom-of-heaven/john-least-in-kingdom`}
+                            text="Least in the Kingdom Greater than John"
+                        />
+                        <SidebarLink
+                            link={`/notebook/kingdom-of-heaven/leaven-the-whole`}
+                            text="Like unto Leaven"
+                        />
+                        <SidebarLink
+                            link={`/notebook/kingdom-of-heaven/mustard-seed`}
+                            text="Like a Mustard Seed"
+                        />
+                        <SidebarLink
+                            link={`/notebook/kingdom-of-heaven/not-all-who-say`}
+                            text={`Not All Who Cry "Lord, Lord!"`}
+                        />
+                        <SidebarLink
+                            link={`/notebook/kingdom-of-heaven/persecuted`}
+                            text="Persecuted for Righteousness' Sake"
+                        />
+                        <SidebarLink
+                            link={`/notebook/kingdom-of-heaven/poor-in-spirit`}
+                            text="Poor in Spirit"
+                        />
+                        <SidebarLink
+                            link={`/notebook/kingdom-of-heaven/seek-first-the-kingdom`}
+                            text="Seek First the Kingdom of God"
+                        />
+                        <SidebarLink
+                            link={`/notebook/kingdom-of-heaven/sowing-good-seed`}
+                            text="Wheat Among Weeds"
+                        />
+                        <SidebarLink
+                            link={`/notebook/kingdom-of-heaven/treasure-in-a-field`}
+                            text="Like Treasure in a Field"
                         />
                     </Dropdown>
                     <Dropdown
@@ -130,7 +178,10 @@ type DropdownProps = {
 
 const SidebarLink = ({ link, text }: { link: string; text: string }) => {
     return (
-        <Link className={`pe-1 ps-6 hover:text-primary-700  `} href={link}>
+        <Link
+            className={`border-b border-b-basic-800 py-1 pe-1 ps-6 hover:text-primary-700  `}
+            href={link}
+        >
             {text}
         </Link>
     );
@@ -145,17 +196,17 @@ const Dropdown = ({
 }: DropdownProps) => {
     return (
         <>
+            <span
+                className="mb-1 ps-6 hover:text-primary-600 "
+                onClick={onClick}
+            >
+                {sectionTitle}
+            </span>
             <div
-                className={`flex w-full cursor-pointer flex-col overflow-hidden border-b border-basic-800  ps-6 transition-[height] duration-200  ${
-                    expanded ? targetHeight : "h-8"
+                className={`flex w-full cursor-pointer flex-col overflow-scroll border-b border-basic-800 ps-6 transition-[height] duration-200  ${
+                    expanded ? targetHeight : "h-0"
                 }`}
             >
-                <span
-                    className="mb-1 hover:text-primary-600 "
-                    onClick={onClick}
-                >
-                    {sectionTitle}
-                </span>
                 {children}
             </div>
         </>
