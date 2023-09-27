@@ -49,6 +49,15 @@ const SubscriptionsPage = () => {
         return <WarningPage warning="Something went wrong!" />;
     }
 
+    if (subscriptions?.length === 0) {
+        return (
+            <PageBlock>
+                <h1 className="mb-6 px-12 text-2xl">Subscriptions</h1>
+                <div className="px-12">No subscriptions yet</div>
+            </PageBlock>
+        );
+    }
+
     return (
         <PageBlock>
             <h1 className="mb-6 px-12 text-2xl">Subscriptions</h1>
