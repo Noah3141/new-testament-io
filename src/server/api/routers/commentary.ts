@@ -1,6 +1,7 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
 import { type Commentary, type CommentaryRating } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 
 export const commentaryRouter = createTRPCRouter({
     upsert: protectedProcedure
@@ -42,6 +43,23 @@ export const commentaryRouter = createTRPCRouter({
             return commentary;
         }),
 
+    getRatingForAuthorIdSriptureIdbySessionId: protectedProcedure
+        .input(z.object({ scriptureId: z.string(), authorId: z.string() }))
+        .query(async ({ ctx, input }) => {
+            const rating: CommentaryRating | null =
+                await ctx.db.commentaryRating.findUnique({
+                    where: {
+                        commentaryAuthorId_commentaryScriptureId_raterId: {
+                            commentaryAuthorId: input.authorId,
+                            commentaryScriptureId: input.scriptureId,
+                            raterId: ctx.session.user.id,
+                        },
+                    },
+                });
+
+            return rating;
+        }),
+
     getSessionUsersForScriptureId: protectedProcedure
         .input(z.object({ scriptureId: z.string() }))
         .query(async ({ input, ctx }) => {
@@ -56,6 +74,26 @@ export const commentaryRouter = createTRPCRouter({
                 });
 
             return commentary;
+        }),
+
+    getForUserIdAndScriptureId: publicProcedure
+        .input(
+            z.object({
+                authorId: z.string(),
+                scriptureId: z.string(),
+            }),
+        )
+        .query(async ({ ctx, input }) => {
+            const commentaryWithRatings = await ctx.db.commentary.findUnique({
+                where: {
+                    authorId_scriptureId: {
+                        authorId: input.authorId,
+                        scriptureId: input.scriptureId,
+                    },
+                },
+                include: { ratings: true },
+            });
+            return commentaryWithRatings;
         }),
 
     deleteSessionUsersForScriptureId: protectedProcedure
@@ -78,51 +116,106 @@ export const commentaryRouter = createTRPCRouter({
         .input(
             z.object({
                 ratings: z.object({
-                    closeness: z.number(),
-                    coherent: z.number(),
-                    comprehensible: z.number(),
-                    comprehensive: z.number(),
-                    deep: z.number(),
-                    practical: z.number(),
+                    closeness: z.number().optional(),
+                    coherent: z.number().optional(),
+                    comprehensible: z.number().optional(),
+                    comprehensive: z.number().optional(),
+                    deep: z.number().optional(),
+                    practical: z.number().optional(),
                 }),
-                raterId: z.string(),
-                commentaryId: z.string(),
                 scriptureId: z.string(),
                 authorId: z.string(),
             }),
         )
-        .mutation(async ({ ctx, input }) => {
-            const commentaryRating: CommentaryRating =
-                await ctx.db.commentaryRating.upsert({
-                    create: {
-                        closeness: input.ratings.closeness,
-                        coherent: input.ratings.coherent,
-                        comprehensible: input.ratings.comprehensible,
-                        comprehensive: input.ratings.comprehensive,
-                        deep: input.ratings.deep,
-                        practical: input.ratings.practical,
-                        raterId: input.raterId,
-                        commentaryAuthorId: input.authorId,
-                        commentaryScriptureId: input.scriptureId,
+        .mutation(
+            async ({
+                ctx,
+                input: {
+                    authorId,
+                    scriptureId,
+                    ratings: {
+                        closeness,
+                        coherent,
+                        comprehensible,
+                        comprehensive,
+                        deep,
+                        practical,
                     },
-                    update: {
-                        closeness: input.ratings.closeness,
-                        coherent: input.ratings.coherent,
-                        comprehensible: input.ratings.comprehensible,
-                        comprehensive: input.ratings.comprehensive,
-                        deep: input.ratings.deep,
-                        practical: input.ratings.practical,
-                    },
-                    where: {
-                        commentaryAuthorId_commentaryScriptureId_raterId: {
-                            commentaryAuthorId: input.authorId,
-                            commentaryScriptureId: input.scriptureId,
-                            raterId: input.raterId,
+                },
+            }) => {
+                if (
+                    !closeness ||
+                    !coherent ||
+                    !comprehensible ||
+                    !comprehensive ||
+                    !deep ||
+                    !practical
+                ) {
+                    throw new TRPCError({
+                        code: "BAD_REQUEST",
+                        message: "Please rate along all dimensions!",
+                    });
+                }
+                const commentaryRating: CommentaryRating =
+                    await ctx.db.commentaryRating.upsert({
+                        create: {
+                            closeness: closeness,
+                            coherent: coherent,
+                            comprehensible: comprehensible,
+                            comprehensive: comprehensive,
+                            deep: deep,
+                            practical: practical,
+                            raterId: ctx.session.user.id,
+                            commentaryAuthorId: authorId,
+                            commentaryScriptureId: scriptureId,
                         },
-                    },
+                        update: {
+                            closeness: closeness,
+                            coherent: coherent,
+                            comprehensible: comprehensible,
+                            comprehensive: comprehensive,
+                            deep: deep,
+                            practical: practical,
+                        },
+                        where: {
+                            commentaryAuthorId_commentaryScriptureId_raterId: {
+                                commentaryAuthorId: authorId,
+                                commentaryScriptureId: scriptureId,
+                                raterId: ctx.session.user.id,
+                            },
+                        },
+                    });
+
+                const authorsRatings: CommentaryRating[] =
+                    await ctx.db.commentaryRating.findMany({
+                        where: { commentaryAuthorId: authorId },
+                    });
+
+                let sum = 0;
+                const profileRating = authorsRatings.forEach((rating) => {
+                    let ratingSum = 0;
+                    ratingSum += rating.closeness;
+                    ratingSum += rating.coherent;
+                    ratingSum += rating.comprehensible;
+                    ratingSum += rating.comprehensive;
+                    ratingSum += rating.deep;
+                    ratingSum += rating.practical;
+
+                    ratingSum /= 6;
+
+                    sum += ratingSum;
                 });
-            return commentaryRating;
-        }),
+
+                sum /= authorsRatings.length;
+
+                await ctx.db.user.update({
+                    where: { id: authorId },
+                    data: { rating: sum },
+                });
+
+                return commentaryRating;
+            },
+        ),
 
     removeRating: protectedProcedure
         .input(

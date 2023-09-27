@@ -3,13 +3,16 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { VscStarEmpty, VscStarFull } from "react-icons/vsc";
 import { api } from "~/utils/api";
+import Loading from "./Loading";
+import Button from "./Button";
 
 type RatingWizardProps = {
     authorId: string;
     raterId: string;
+    scriptureId: string;
 };
 
-const label = (v: number | null): string => {
+const label = (v: number | undefined): string => {
     switch (v) {
         case 1: // min
             return "Very poor";
@@ -32,35 +35,46 @@ const label = (v: number | null): string => {
 
 type Ratings = {
     // Includes all texts in framework
-    comprehensive: number | null;
+    comprehensive: number | undefined;
     // The interpretation is graspable with the mind
-    comprehensible: number | null;
+    comprehensible: number | undefined;
     // How far-fetched or how many leaps, how close does the interpretation stay to the text. Interpretation makes sense for the text even without other texts
-    coherent: number | null;
+    coherent: number | undefined;
     // Internally logically consistent and makes sense together
-    closeness: number | null;
+    closeness: number | undefined;
     // Can be put into action
-    practical: number | null;
+    practical: number | undefined;
     // Demonstrates insight and a deepness of interpretation of the world and text
-    deep: number | null;
+    deep: number | undefined;
 };
 
-const RatingWizard = ({ raterId, authorId }: RatingWizardProps) => {
+const RatingWizard = ({
+    raterId,
+    authorId,
+    scriptureId,
+}: RatingWizardProps) => {
+    const dataState = api.useContext();
+    const { data: currentRatings, isLoading: currentRatingsLoading } =
+        api.commentary.getRatingForAuthorIdSriptureIdbySessionId.useQuery({
+            authorId: authorId,
+            scriptureId: scriptureId,
+        });
+
     const [ratings, setRatings] = useState<Ratings>({
-        comprehensive: null,
-        comprehensible: null,
-        closeness: null,
-        coherent: null,
-        practical: null,
-        deep: null,
+        comprehensive: currentRatings?.comprehensive,
+        comprehensible: currentRatings?.comprehensible,
+        closeness: currentRatings?.closeness,
+        coherent: currentRatings?.coherent,
+        practical: currentRatings?.practical,
+        deep: currentRatings?.deep,
     });
     const [hover, setHover] = useState<Ratings>({
-        comprehensive: null,
-        comprehensible: null,
-        closeness: null,
-        coherent: null,
-        practical: null,
-        deep: null,
+        comprehensive: undefined,
+        comprehensible: undefined,
+        closeness: undefined,
+        coherent: undefined,
+        practical: undefined,
+        deep: undefined,
     });
     const ratingToastId = "ratingToastId";
     const { mutate: updateRating, isLoading: loadingRatingUpdate } =
@@ -68,31 +82,46 @@ const RatingWizard = ({ raterId, authorId }: RatingWizardProps) => {
             onMutate: () => {
                 toast.loading("Submitting rating...", { id: ratingToastId });
             },
-            onSuccess: () => {
-                toast.success("Rating submitted!", { id: ratingToastId });
+            onSuccess: async () => {
+                toast.success("Ratings submitted!", { id: ratingToastId });
+                await dataState.commentary.invalidate();
             },
-            onError: () => {
-                toast.error("Something went wrong!", { id: ratingToastId });
+            onError: (e) => {
+                toast.error(`${e.message}`, { id: ratingToastId });
             },
         });
 
+    if (authorId == raterId) {
+        return;
+    }
+
+    if (currentRatingsLoading) {
+        return (
+            <div className="flex flex-row justify-end">
+                <Loading inline={true} />;
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col items-end px-12">
-            <div className="pe-2">{ratings.comprehensive}</div>
-
             <div className="flex flex-row justify-end">
                 <div className="pe-2">Comprehensive</div>
                 <Rating
                     max={7}
+                    defaultValue={ratings.comprehensive}
                     precision={1}
                     onChange={(e, newValue) => {
-                        console.log(ratings.comprehensive);
                         e.preventDefault();
+
+                        if (!newValue) {
+                            toast.error("You must select a value.");
+                            return;
+                        }
                         setRatings((prev) => ({
                             ...prev,
                             comprehensive: newValue,
                         }));
-                        console.log(ratings.comprehensive);
                     }}
                     onChangeActive={(event, newHover) => {
                         setHover((prev) => ({
@@ -117,14 +146,16 @@ const RatingWizard = ({ raterId, authorId }: RatingWizardProps) => {
                 <Rating
                     max={7}
                     precision={1}
+                    defaultValue={ratings.closeness}
                     onChange={(e, newValue) => {
-                        console.log(ratings.closeness);
                         e.preventDefault();
+                        if (!newValue) {
+                            toast.error("You must select a value.");
+                        }
                         setRatings((prev) => ({
                             ...prev,
-                            closeness: newValue,
+                            closeness: newValue ?? undefined,
                         }));
-                        console.log(ratings.closeness);
                     }}
                     onChangeActive={(event, newHover) => {
                         setHover((prev) => ({
@@ -148,14 +179,16 @@ const RatingWizard = ({ raterId, authorId }: RatingWizardProps) => {
                 <Rating
                     max={7}
                     precision={1}
+                    defaultValue={ratings.coherent}
                     onChange={(e, newValue) => {
-                        console.log(ratings.coherent);
                         e.preventDefault();
+                        if (!newValue) {
+                            toast.error("You must select a value.");
+                        }
                         setRatings((prev) => ({
                             ...prev,
-                            coherent: newValue,
+                            coherent: newValue ?? undefined,
                         }));
-                        console.log(ratings.coherent);
                     }}
                     onChangeActive={(event, newHover) => {
                         setHover((prev) => ({
@@ -180,14 +213,16 @@ const RatingWizard = ({ raterId, authorId }: RatingWizardProps) => {
                 <Rating
                     max={7}
                     precision={1}
+                    defaultValue={ratings.comprehensible}
                     onChange={(e, newValue) => {
-                        console.log(ratings.comprehensible);
                         e.preventDefault();
+                        if (!newValue) {
+                            toast.error("You must select a value.");
+                        }
                         setRatings((prev) => ({
                             ...prev,
-                            comprehensible: newValue,
+                            comprehensible: newValue ?? undefined,
                         }));
-                        console.log(ratings.comprehensible);
                     }}
                     onChangeActive={(event, newHover) => {
                         setHover((prev) => ({
@@ -212,14 +247,16 @@ const RatingWizard = ({ raterId, authorId }: RatingWizardProps) => {
                 <Rating
                     max={7}
                     precision={1}
+                    defaultValue={ratings.deep}
                     onChange={(e, newValue) => {
-                        console.log(ratings.deep);
                         e.preventDefault();
+                        if (!newValue) {
+                            toast.error("You must select a value.");
+                        }
                         setRatings((prev) => ({
                             ...prev,
-                            deep: newValue,
+                            deep: newValue ?? undefined,
                         }));
-                        console.log(ratings.deep);
                     }}
                     onChangeActive={(event, newHover) => {
                         setHover((prev) => ({
@@ -241,14 +278,16 @@ const RatingWizard = ({ raterId, authorId }: RatingWizardProps) => {
                 <Rating
                     max={7}
                     precision={1}
+                    defaultValue={ratings.practical}
                     onChange={(e, newValue) => {
-                        console.log(ratings.practical);
                         e.preventDefault();
+                        if (!newValue) {
+                            toast.error("You must select a value.");
+                        }
                         setRatings((prev) => ({
                             ...prev,
-                            practical: newValue,
+                            practical: newValue ?? undefined,
                         }));
-                        console.log(ratings.practical);
                     }}
                     onChangeActive={(event, newHover) => {
                         setHover((prev) => ({
@@ -266,6 +305,18 @@ const RatingWizard = ({ raterId, authorId }: RatingWizardProps) => {
                     {label(hover.practical)}
                 </span>
             </div>
+            <Button
+                className="me-20 mt-6"
+                onClick={() => {
+                    updateRating({
+                        authorId: authorId,
+                        ratings: ratings,
+                        scriptureId: scriptureId,
+                    });
+                }}
+            >
+                Submit Ratings
+            </Button>
         </div>
     );
 };

@@ -59,7 +59,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    rating        Int?
+    rating        Float?
     commentaries  Commentary[]
 
     followedBy        User[]             @relation(name: "Followers")

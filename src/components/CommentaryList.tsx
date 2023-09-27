@@ -19,9 +19,15 @@ const CommentaryList = ({
     if (!commentaries || commentaries.length === 0) {
         return <div className="px-12">No commentaries</div>;
     }
+
     return (
         <div className="">
             {commentaries.map((commentary, i) => {
+                const link =
+                    viewing === authorId
+                        ? `/${commentary.link}`
+                        : `/${commentary.link}?user=${authorId}`;
+
                 return (
                     <div
                         className="flex flex-col border-y border-y-basic-800 px-12 py-6"
@@ -32,7 +38,7 @@ const CommentaryList = ({
                                 onClick={() => {
                                     setViewing(commentary.authorId);
                                 }}
-                                href={`/${commentary.link}`}
+                                href={link}
                                 className="text-2xl hover:text-primary-700"
                             >
                                 {commentary.title}

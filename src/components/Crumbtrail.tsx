@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { useViewContext } from "~/server/contexts";
 
 const Crumbtrail = () => {
     const router = useRouter();
-
+    const { viewing } = useViewContext();
     function titleCase(str: string) {
         const strs: string[] = str.split(" "); // Lowercase the phrase and give me an array of its words
         const exceptWords = ["of", "the", "through", "by", "in", "and", "as"];
@@ -33,7 +34,7 @@ const Crumbtrail = () => {
                     <span key={i} className="pe-2">
                         <Link
                             className=" hover:text-primary-700"
-                            href={`${link}`}
+                            href={`${link}?user=${viewing}`}
                         >
                             {crumb}{" "}
                         </Link>

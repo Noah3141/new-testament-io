@@ -139,7 +139,23 @@ const MyProfile = () => {
                     <span className="text-3xl">{user.name}</span>
                     <div className="flex w-full flex-row justify-end">
                         <span className="text-basic-50">
-                            {user.rating ?? "No rating"}
+                            {user.rating ? (
+                                <Rating
+                                    name="read-only"
+                                    value={user.rating}
+                                    precision={1}
+                                    readOnly
+                                    className=" text-primary-600"
+                                    icon={
+                                        <VscStarFull className="text-primary-500" />
+                                    }
+                                    emptyIcon={
+                                        <VscStarEmpty className=" text-basic-500" />
+                                    }
+                                />
+                            ) : (
+                                "No rating"
+                            )}
                         </span>
                     </div>
                 </div>

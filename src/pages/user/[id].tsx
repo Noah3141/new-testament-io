@@ -1,9 +1,11 @@
+import { Rating } from "@mui/material";
 import { Commentary } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
+import { VscStarEmpty, VscStarFull } from "react-icons/vsc";
 import { Discuss, Oval } from "react-loader-spinner";
 import Button from "~/components/Button";
 import CommentaryList from "~/components/CommentaryList";
@@ -106,7 +108,21 @@ const UserProfilePage = () => {
                     {userForPage.name}
                 </h1>
                 <div className="flex flex-row items-center gap-6 text-basic-50">
-                    {userForPage.rating ?? "No rating"}
+                    {userForPage.rating ? (
+                        <Rating
+                            name="read-only"
+                            value={userForPage.rating}
+                            precision={1}
+                            readOnly
+                            className=" text-primary-600"
+                            icon={<VscStarFull className="text-primary-500" />}
+                            emptyIcon={
+                                <VscStarEmpty className=" text-basic-500" />
+                            }
+                        />
+                    ) : (
+                        "No rating"
+                    )}
 
                     {!isSessionsOwnPage && signedIn && (
                         <Button
@@ -131,15 +147,17 @@ const UserProfilePage = () => {
             </div>
             <div>
                 {commentariesLoading ? (
-                    <Discuss
-                        visible={commentariesLoading}
-                        height="80"
-                        width="80"
-                        ariaLabel="comment-loading"
-                        wrapperStyle={{}}
-                        wrapperClass="comment-wrapper"
-                        colors={["#ff727d", "#ff727d"]}
-                    />
+                    <div className="flex h-40 w-full flex-row items-center justify-center">
+                        <Discuss
+                            visible={commentariesLoading}
+                            height="80"
+                            width="80"
+                            ariaLabel="comment-loading"
+                            wrapperStyle={{}}
+                            wrapperClass="comment-wrapper"
+                            colors={["#ff727d", "#ff727d"]}
+                        />
+                    </div>
                 ) : (
                     <CommentaryList
                         {...{

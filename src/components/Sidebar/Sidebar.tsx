@@ -14,7 +14,7 @@ const Sidebar = ({}) => {
 
     return (
         <div className="sticky top-0 max-h-screen w-[320px]  shrink-0 overflow-y-scroll  pt-6  text-lg">
-            <div className="flex shrink-0 flex-col items-start">
+            <div className="flex shrink-0 flex-col items-start ">
                 <SuperDropdown
                     sectionTitle="Gospels"
                     expanded={sidebarState.Gospels}
@@ -24,7 +24,7 @@ const Sidebar = ({}) => {
                             Gospels: !sidebarState.Gospels,
                         })
                     }
-                    targetHeight={"h-[800px]"}
+                    targetHeight={"h-[900px]"}
                 >
                     {/* KINGDOM OF HEAVEN SECTION */}
                     <Dropdown
@@ -106,63 +106,28 @@ const Sidebar = ({}) => {
                                     !sidebarState.SermonOnTheMount,
                             })
                         }
-                        targetHeight={"h-24"}
+                        targetHeight={"h-96"}
                     >
+                        <SidebarLink link={``} text="Beatitudes" />
                         <SidebarLink link={``} text="Salt and Light" />
-                    </Dropdown>
-                    <Dropdown
-                        sectionTitle="Healings"
-                        expanded={sidebarState.Healings}
-                        onClick={() =>
-                            setSidebarState({
-                                ...sidebarState,
-                                Healings: !sidebarState.Healings,
-                            })
-                        }
-                        targetHeight={"h-32"}
-                    >
-                        <SidebarLink link={``} text="The Blind Man" />
-                    </Dropdown>
-                    <Dropdown
-                        sectionTitle="Miracles"
-                        expanded={sidebarState.Miracles}
-                        onClick={() =>
-                            setSidebarState({
-                                ...sidebarState,
-                                Miracles: !sidebarState.Miracles,
-                            })
-                        }
-                        targetHeight={"h-32"}
-                    >
-                        <SidebarLink link={``} text="Water Into Wine" />
+                        <SidebarLink link={``} text="Fulfillment of the Law" />
+                        <SidebarLink link={``} text="Disputes" />
+                        <SidebarLink link={``} text="Prayer" />
+                        <SidebarLink link={``} text="Treasures in Heaven" />
+                        <SidebarLink link={``} text="Seek First the Kingdom" />
+                        <SidebarLink link={``} text="Moral Judgement" />
+                        <SidebarLink link={``} text="Ask, Seek, Knock" />
+                        <SidebarLink link={``} text="True and False Prophets" />
+                        <SidebarLink
+                            link={``}
+                            text="True and False Disciples"
+                        />
+                        <SidebarLink
+                            link={``}
+                            text="Wise and Foolish Builders"
+                        />
                     </Dropdown>
                 </SuperDropdown>
-                <Dropdown
-                    sectionTitle="Fire & Water"
-                    expanded={sidebarState.FireAndWater}
-                    onClick={() =>
-                        setSidebarState({
-                            ...sidebarState,
-                            FireAndWater: !sidebarState.FireAndWater,
-                        })
-                    }
-                    targetHeight={"h-24"}
-                >
-                    <SidebarLink link={``} text="Born Again of Fire" />
-                </Dropdown>
-                <Dropdown
-                    sectionTitle="Pharisees"
-                    expanded={sidebarState.Pharisees}
-                    onClick={() =>
-                        setSidebarState({
-                            ...sidebarState,
-                            Pharisees: !sidebarState.Pharisees,
-                        })
-                    }
-                    targetHeight={"h-96"}
-                >
-                    <SidebarLink link={``} text="Give Unto Ceasar" />
-                </Dropdown>
             </div>
         </div>
     );
@@ -179,7 +144,7 @@ type DropdownProps = {
 const SidebarLink = ({ link, text }: { link: string; text: string }) => {
     return (
         <Link
-            className={`border-b border-b-basic-800 py-1 pe-1 ps-6 hover:text-primary-700  `}
+            className={`border-b border-b-basic-800 py-1 pe-2 ps-6 italic hover:text-primary-700  `}
             href={link}
         >
             {text}

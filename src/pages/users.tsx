@@ -7,6 +7,8 @@ import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import Loading from "~/components/Loading";
 import WarningPage from "~/components/DefaultPages/WarningPage";
+import { Rating } from "@mui/material";
+import { VscStarEmpty, VscStarFull } from "react-icons/vsc";
 
 const UsersPage = () => {
     const { data: users, isLoading: usersLoading } =
@@ -45,7 +47,24 @@ const UsersPage = () => {
                                     {user.name}
                                 </Link>
                                 <div className="relative">
-                                    <span>{user.rating ?? "No rating"}</span>
+                                    <span>
+                                        {user.rating ? (
+                                            <Rating
+                                                name="read-only"
+                                                value={user.rating}
+                                                readOnly
+                                                className=" text-primary-600"
+                                                icon={
+                                                    <VscStarFull className="text-primary-500" />
+                                                }
+                                                emptyIcon={
+                                                    <VscStarEmpty className=" text-basic-500" />
+                                                }
+                                            />
+                                        ) : (
+                                            "No rating"
+                                        )}
+                                    </span>
                                     <span
                                         title="Subscribed"
                                         className="absolute -right-1 top-0 translate-x-full cursor-default"

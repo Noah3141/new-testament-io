@@ -7,6 +7,8 @@ import { signIn, useSession } from "next-auth/react";
 import Button from "./Button";
 import { useViewContext } from "~/server/contexts";
 import Loading from "./Loading";
+import { api } from "~/utils/api";
+import { useRouter } from "next/router";
 
 enum Translation {
     KJV,
@@ -34,6 +36,15 @@ const Scripture = ({
 }: ScriptureProps) => {
     const { data: session, status } = useSession();
     const { viewing, setViewing } = useViewContext();
+    const router = useRouter();
+    if (typeof router.query.user == "string") {
+        setViewing(router.query.user);
+    }
+    const { data: viewedCommentary, isLoading: viewedCommentaryLoading } =
+        api.commentary.getForUserIdAndScriptureId.useQuery({
+            authorId: viewing ?? "throw",
+            scriptureId: scriptureId,
+        });
 
     const [bibleTranslation, setBibleTranslation] = useState<Translation>(
         Translation.KJV,
@@ -41,6 +52,7 @@ const Scripture = ({
 
     if (typeof viewing == "string" && viewing !== session?.user.id) {
         // viewing someone else's
+
         return (
             <>
                 <Crumbtrail />
@@ -70,11 +82,24 @@ const Scripture = ({
                                 Sign in
                             </Button>
                         </div>
+                    ) : viewedCommentary ? (
+                        <>
+                            <div className="mb-6 px-12 py-6">
+                                <h1 className="mb-3 text-2xl font-bold">
+                                    {viewedCommentary.title}
+                                </h1>
+                                <p className="whitespace-pre-wrap">
+                                    {viewedCommentary.content}
+                                </p>
+                            </div>
+                            <RatingWizard
+                                scriptureId={scriptureId}
+                                authorId={viewing}
+                                raterId={session.user.id}
+                            />
+                        </>
                     ) : (
-                        <RatingWizard
-                            authorId={viewing}
-                            raterId={session.user.id}
-                        />
+                        <></>
                     )}
                 </div>
             </>

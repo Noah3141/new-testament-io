@@ -254,7 +254,7 @@ type CommentaryDisplayProps = {
     remove: (scriptureId: string) => void;
 };
 
-const CommentaryDisplay = ({
+export const CommentaryDisplay = ({
     commentary,
     scriptureId,
     submissionLoading,
