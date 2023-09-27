@@ -16,6 +16,7 @@ export const userRouter = createTRPCRouter({
     getAllWithWhetherSubscribed: publicProcedure.query(async ({ ctx }) => {
         const users = await ctx.db.user.findMany({
             include: { followedBy: { where: { id: ctx.session?.user.id } } },
+            where: { visible: true },
         });
 
         const usersWithWhetherSubscribedTo = users.map((user) => {
@@ -180,4 +181,38 @@ export const userRouter = createTRPCRouter({
 
         return commentaries;
     }),
+
+    updateProfile: protectedProcedure
+        .input(
+            z.object({
+                name: z.string().nullable(),
+                email: z.string().nullable(),
+                image: z.string().nullable(),
+                denomination: z.string().nullable(),
+                age: z.number().min(1).nullable(),
+                churchFrequency: z.number().min(1).max(7).nullable().optional(),
+                churchSatisfaction: z
+                    .number()
+                    .min(1)
+                    .max(7)
+                    .nullable()
+                    .optional(),
+                visible: z.boolean().nullable(),
+            }),
+        )
+        .mutation(async ({ ctx, input }) => {
+            const user: User = await ctx.db.user.update({
+                where: { id: ctx.session.user.id },
+                data: {
+                    name: input.name ?? undefined,
+                    email: input.email ?? undefined,
+                    denomination: input.denomination ?? undefined,
+                    age: input.age ?? undefined,
+                    churchFrequency: input.churchFrequency,
+                    churchSatisfaction: input.churchSatisfaction,
+                    visible: input.visible ?? true,
+                },
+            });
+            return user;
+        }),
 });
