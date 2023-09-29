@@ -13,6 +13,7 @@ import HoverEdit from "~/components/HoverEdit";
 import CommentaryList from "~/components/CommentaryList";
 import toast from "react-hot-toast";
 import { Rating, unstable_useEnhancedEffect } from "@mui/material";
+import { Discuss } from "react-loader-spinner";
 
 type ProfileForm = {
     name: string | null;
@@ -496,7 +497,17 @@ const MyProfile = () => {
             <div className="border-t  border-basic-800 py-6">
                 <h1 className="px-12 pb-2 text-2xl">Commentaries</h1>
                 {commentariesLoading ? (
-                    <Loading inline={false} />
+                    <div className="flex h-40 w-full flex-row items-center justify-center">
+                        <Discuss
+                            visible={commentariesLoading}
+                            height="80"
+                            width="80"
+                            ariaLabel="comment-loading"
+                            wrapperStyle={{}}
+                            wrapperClass="comment-wrapper"
+                            colors={["#84cc16", "#84cc16"]}
+                        />
+                    </div>
                 ) : (
                     <CommentaryList
                         sessionId={session.user.id}

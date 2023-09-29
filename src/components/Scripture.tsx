@@ -72,16 +72,32 @@ const Scripture = ({
                     {status == "loading" ? (
                         <Loading inline={false} />
                     ) : !session ? (
-                        <div className="flex flex-row justify-end px-12">
-                            <Button
-                                onClick={() => {
-                                    void signIn();
-                                }}
-                                color="primary"
-                            >
-                                Sign in
-                            </Button>
-                        </div>
+                        <>
+                            {viewedCommentaryLoading ? (
+                                <Loading inline={false} />
+                            ) : (
+                                viewedCommentary && (
+                                    <div className="mb-6 px-12 py-6">
+                                        <h1 className="mb-3 text-2xl font-bold">
+                                            {viewedCommentary.title}
+                                        </h1>
+                                        <p className="whitespace-pre-wrap">
+                                            {viewedCommentary.content}
+                                        </p>
+                                    </div>
+                                )
+                            )}
+                            <div className="flex flex-row justify-end px-12">
+                                <Button
+                                    onClick={() => {
+                                        void signIn();
+                                    }}
+                                    color="primary"
+                                >
+                                    Sign in to rate
+                                </Button>
+                            </div>
+                        </>
                     ) : viewedCommentary ? (
                         <>
                             <div className="mb-6 px-12 py-6">

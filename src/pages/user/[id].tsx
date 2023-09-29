@@ -155,7 +155,7 @@ const UserProfilePage = () => {
                             ariaLabel="comment-loading"
                             wrapperStyle={{}}
                             wrapperClass="comment-wrapper"
-                            colors={["#ff727d", "#ff727d"]}
+                            colors={["#84cc16", "#84cc16"]}
                         />
                     </div>
                 ) : (
