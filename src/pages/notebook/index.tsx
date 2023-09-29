@@ -21,6 +21,7 @@ const NotebookPage = () => {
                 </h3>
                 <h3 className="text-xl">
                     <Link
+                        className="hidden"
                         href={`/notebook/sermon-on-the-mount?user=${viewing}`}
                     >
                         {" "}

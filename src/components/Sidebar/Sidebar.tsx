@@ -13,7 +13,7 @@ const Sidebar = ({}) => {
     const { sidebarState, setSidebarState } = useSidebarContext();
 
     return (
-        <div className="sticky top-0 max-h-screen w-[320px]  shrink-0 overflow-y-scroll  pt-6  text-lg">
+        <div className="sticky top-0 hidden max-h-screen w-[320px] shrink-0  overflow-y-scroll pt-6  text-lg sm:block">
             <div className="flex shrink-0 flex-col items-start ">
                 <SuperDropdown
                     sectionTitle="Gospels"
